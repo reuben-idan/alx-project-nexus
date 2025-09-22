@@ -1,31 +1,28 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { productsApi } from './api/productsApi';
-import { authApi } from './api/authApi';
-import { cartApi } from './api/cartApi';
-import { ordersApi } from './api/ordersApi';
-import authReducer from './slices/authSlice';
-import cartReducer from './slices/cartSlice';
-import uiReducer from './slices/uiSlice';
+import productsReducer from '../store/slices/productsSlice';
+import cartReducer from '../store/slices/cartSlice';
+import authReducer from '../store/slices/authSlice';
 
 // Configure the Redux store
 export const store = configureStore({
   reducer: {
-    [productsApi.reducerPath]: productsApi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
-    [cartApi.reducerPath]: cartApi.reducer,
-    [ordersApi.reducerPath]: ordersApi.reducer,
-    auth: authReducer,
+    products: productsReducer,
     cart: cartReducer,
-    ui: uiReducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(productsApi.middleware)
-      .concat(authApi.middleware)
-      .concat(cartApi.middleware)
-      .concat(ordersApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ['cart/addToCart', 'cart/updateCartItemQuantity', 'cart/removeFromCart'],
+        // Ignore these field paths in all actions
+        ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
+        // Ignore these paths in the state
+        ignoredPaths: ['cart.items', 'cart.summary'],
+      },
+    }),
   devTools: process.env.NODE_ENV !== 'production',
 });
 
