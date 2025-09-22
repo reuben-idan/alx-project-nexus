@@ -1,112 +1,3 @@
-# Everything Grocery E-Commerce Platform Documentation
-
-## Overview
-
-This repository serves as documentation for my build of the "Everything Grocery" dynamic e-commerce product catalog, as part of the ProDev Frontend Engineering program. The goal is to simulate a real-world scenario where developers balance functional requirements, scalable architecture, and user experience for a modern grocery shopping application accessible via web, mobile, or PWA.
-
----
-
-## Project Objective
-
-- **API Integration:** Fetch, display, and synchronize product data dynamically from backend APIs.
-- **User Convenience:** Implement rich filtering and sorting for seamless product discovery.
-- **Performance Optimization:** Support high-traffic scenarios with pagination and infinite scrolling.
-- **Accessibility & Responsiveness:** Ensure an inclusive, responsive UI across devices.
-- **Maintainable Frontend:** Leverage modern technologies for scalability and clean codebase.
-
----
-
-## Table of Contents
-
-1. [Project Goals](#project-goals)
-2. [Tech Stack](#tech-stack)
-3. [Key Features](#key-features)
-    - [API Data Integration](#api-data-integration)
-    - [Filtering and Sorting](#filtering-and-sorting)
-    - [Pagination and Infinite Scrolling](#pagination-and-infinite-scrolling)
-    - [Responsive Design](#responsive-design)
-4. [Challenges & Solutions](#challenges-and-solutions)
-5. [Implementation Process](#implementation-process)
-6. [Essential Widgets](#essential-widgets)
-7. [Evaluation Criteria](#evaluation-criteria)
-8. [License](#license)
-9. [Contributing](#contributing)
-10. [Contact & Support](#contact--support)
-
----
-
-## Project Goals
-
-- **Build a scalable product catalog frontend using modern technologies.**
-- **Optimize for performance, accessibility, and responsiveness.**
-- **Provide seamless navigation, filtering, and product discovery.**
-- **Document process for future reference and collaboration.**
-
----
-
-## Tech Stack
-
-- **React / React Native:** Component-based architecture for web and mobile.
-- **Redux Toolkit:** Predictable, scalable state management and async flows.
-- **TypeScript:** Static typing for reliability and maintainability.
-- **Tailwind CSS:** Utility-first CSS for rapid responsive UI.
-- **API Integration:** RESTful endpoints for product data.
-
----
-
-## Key Features
-
-### 1. API Data Integration
-
-- Dynamic fetching of product catalog from backend API.
-- Robust error boundaries and loading states for smooth UX.
-
-### 2. Filtering and Sorting
-
-- **Category Filtering:** Users can select categories to view relevant products.
-- **Price Sorting:** Sort products by ascending or descending prices.
-- **Multi-Criteria Filters:** Combine filters for refined search results.
-
-### 3. Pagination and Infinite Scrolling
-
-- **Pagination:** Numbered navigation to browse products in chunks.
-- **Infinite Scrolling:** Auto-load more products as users scroll for continuous browsing.
-
-### 4. Responsive Design
-
-- Layout adapts to desktops, tablets, and mobile devices.
-- Utilizes Tailwind CSS for rapid prototyping and flexible grid systems.
-
----
-
-## Challenges and Solutions
-
-| Challenge                    | Solution Approach                                       |
-|------------------------------|--------------------------------------------------------|
-| API Latency & Errors         | Implemented loading skeletons, retry logic, error boundaries. |
-| Complex Filtering Logic      | Utilized memoized selectors and composable filter functions in Redux. |
-| Infinite Scrolling           | Leveraged Intersection Observer API and Redux middleware for dynamic loading. |
-| Responsive UI on Legacy Browsers | Applied progressive enhancement and CSS polyfills.       |
-| State Synchronization        | Centralized logic using Redux Toolkit and React Query for data fetching. |
-| Accessibility                | Ensured semantic HTML, keyboard navigation, and proper ARIA roles. |
-| Commit Discipline            | Adopted Conventional Commit messages and frequent atomic commits. |
-
----
-
-## Implementation Process
-
-### Git Commit Workflow
-
-- **Initial Setup**
-    - `feat: set up project structure with React and TypeScript`
-    - `feat: add API integration for fetching product data`
-- **Feature Development**
-    - `feat: implement product filtering and sorting functionality`
-    - `feat: add pagination and infinite scrolling`
-- **UI Enhancements**
-    - `style: enhance UI with Tailwind CSS`
-- **Bug Fixes**
-    - `fix: resolve bug in filtering logic`
 - **Documentation**
     - `docs: update README with project setup and features`
 - **Deployment**
@@ -171,3 +62,89 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for guidelines on collaboration, code
 For questions and support, reach out via the Discord channel or open a discussion in the repository.
 
 ---
+=======
+# Everything Grocery E-Commerce Platform
+
+## Overview
+
+A modern, responsive e-commerce platform for grocery shopping with a focus on user experience and performance. Built with React, TypeScript, Redux Toolkit, and Tailwind CSS.
+
+## Features
+
+- 🛍️ Dynamic product catalog with real-time updates
+- 🔍 Advanced filtering and sorting
+- 🖥️ Responsive design (desktop, tablet, mobile)
+- 🚀 Optimized performance with code splitting
+- 🎨 Modern UI with iOS-inspired design
+- 🔄 Infinite scrolling and pagination
+- 🔒 Secure authentication
+- 🛒 Shopping cart functionality
+- 🌐 PWA support
+
+## Tech Stack
+
+- **Frontend Framework**: React 18
+- **Language**: TypeScript
+- **State Management**: Redux Toolkit
+- **Styling**: Tailwind CSS + Headless UI
+- **Routing**: React Router 6
+- **API**: RESTful API integration
+- **Build Tool**: Vite
+- **Testing**: Jest + React Testing Library
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 16+ and npm/yarn
+- Git
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/everything-grocery.git
+   cd everything-grocery
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+4. Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
+
+## Scripts
+
+- `dev`: Start development server
+- `build`: Build for production
+- `preview`: Preview production build
+- `test`: Run tests
+- `lint`: Run ESLint
+- `format`: Format code with Prettier
+
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any questions or feedback, please reach out to [your-email@example.com](mailto:your-email@example.com).
+
+---
+
+Built with ❤️ by [Your Name]
+>>>>>>> origin/master
