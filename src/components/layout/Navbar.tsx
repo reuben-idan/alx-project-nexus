@@ -1,185 +1,282 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
-import { useAppSelector } from '../../hooks/useAppSelector';
-import { selectCartItemsCount } from '../../features/cart/cartSelectors';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ShoppingCart, Search, User, Menu, X, ChevronDown } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store';
+import { toggleCart, toggleSearch, setTheme } from '../../store/slices/uiSlice';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useDebounce } from '../../hooks/useDebounce';
-import { useAppDispatch } from '../../store';
-import { searchProducts } from '../../features/products/productsSlice';
+// import { searchProducts } from '../../features/products/productsSlice';
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  description?: string;
+}
+
+interface NavLink {
+  name: string;
+  path: string;
+  children?: Category[];
+}
 
 const Navbar: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  // Search functionality will be implemented later
+  const [searchQuery] = useState('');
+
+  // Mock categories - replace with actual API call
+  const categories: Category[] = [
+    { id: '1', name: 'Fruits & Vegetables', slug: 'fruits-vegetables' },
+    { id: '2', name: 'Dairy & Eggs', slug: 'dairy-eggs' },
+    { id: '3', name: 'Meat & Seafood', slug: 'meat-seafood' },
+    { id: '4', name: 'Bakery', slug: 'bakery' },
+    { id: '5', name: 'Beverages', slug: 'beverages' },
+  ];
+
+  const { cart } = useSelector((state: RootState) => ({
+    cart: state.cart,
+  }));
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
-  const cartItemsCount = useAppSelector(selectCartItemsCount);
-  const dispatch = useAppDispatch();
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   // Close mobile menu when route changes
   useEffect(() => {
-    setIsMenuOpen(false);
+    setIsMobileMenuOpen(false);
   }, [location]);
 
   // Handle search with debounce
   useEffect(() => {
     if (debouncedSearchQuery) {
-      dispatch(searchProducts(debouncedSearchQuery));
+      // dispatch(searchProducts(debouncedSearchQuery));
+      console.log('Searching for:', debouncedSearchQuery);
     }
-  }, [debouncedSearchQuery, dispatch]);
+  }, [debouncedSearchQuery]);
 
-  const navLinks = [
+  const navLinks: NavLink[] = [
     { name: 'Home', path: '/' },
     { name: 'Shop', path: '/products' },
-    { name: 'Categories', path: '/categories' },
+    {
+      name: 'Categories',
+      path: '/categories',
+      children: categories,
+    },
     { name: 'Deals', path: '/deals' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'New Arrivals', path: '/new-arrivals' },
   ];
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50 backdrop-blur-md bg-opacity-80">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm'
+          : 'bg-white dark:bg-gray-900'
+      } border-b border-gray-200 dark:border-gray-800`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="text-2xl font-bold text-ios-blue">
-              Everything Grocery
+            <Link to="/" className="flex items-center">
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
+                Everything Grocery
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8 items-center">
+          <nav className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-3 py-2 text-sm font-medium ${
-                  location.pathname === link.path
-                    ? 'text-ios-blue border-b-2 border-ios-blue'
-                    : 'text-ios-label-primary hover:text-ios-blue transition-colors'
-                }`}
-              >
-                {link.name}
-              </Link>
+              <div key={link.path} className="relative group">
+                <Link
+                  to={link.path}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    location.pathname === link.path
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
+                  }`}
+                  onMouseEnter={() => link.children && setIsCategoriesOpen(true)}
+                  onMouseLeave={() => link.children && setIsCategoriesOpen(false)}
+                >
+                  <div className="flex items-center">
+                    {link.name}
+                    {link.children && (
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    )}
+                  </div>
+                </Link>
+
+                {/* Dropdown Menu */}
+                {link.children && link.children.length > 0 && (
+                  <div
+                    className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0"
+                    onMouseEnter={() => setIsCategoriesOpen(true)}
+                    onMouseLeave={() => setIsCategoriesOpen(false)}
+                  >
+                    <div className="py-1">
+                      {link.children.map((category) => (
+                        <Link
+                          key={category.id}
+                          to={`/categories/${category.slug}`}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                      <div className="border-t border-gray-200 dark:border-gray-800 my-1"></div>
+                      <Link
+                        to="/categories"
+                        className="block px-4 py-2 text-sm font-medium text-blue-600 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-gray-800"
+                      >
+                        View all categories
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-md mx-4">
-            <div className="relative w-full">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-ios-label-tertiary" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="block w-full pl-10 pr-3 py-2 border border-ios-gray-4 rounded-full bg-ios-gray-6 text-ios-label-primary placeholder-ios-label-tertiary focus:outline-none focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Icons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/account"
-              className="p-2 rounded-full text-ios-label-primary hover:bg-ios-gray-6 transition-colors"
-              aria-label="Account"
+          {/* Right side icons */}
+          <div className="flex items-center space-x-2">
+            <button
+              type="button"
+              className="p-2 rounded-full text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 focus:outline-none"
+              onClick={() => dispatch(toggleSearch())}
+              aria-label="Search"
             >
-              <User className="h-6 w-6" />
-            </Link>
-            <Link
-              to="/cart"
-              className="p-2 rounded-full text-ios-label-primary hover:bg-ios-gray-6 transition-colors relative"
+              <Search className="h-5 w-5" />
+            </button>
+
+            <button
+              type="button"
+              className="p-2 rounded-full text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 focus:outline-none relative"
+              onClick={() => dispatch(toggleCart())}
               aria-label="Shopping Cart"
             >
-              <ShoppingCart className="h-6 w-6" />
-              {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-ios-red text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartItemsCount}
+              <ShoppingCart className="h-5 w-5" />
+              {cart.items && cart.items.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cart.items.length}
                 </span>
               )}
-            </Link>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-ios-label-primary hover:bg-ios-gray-6 focus:outline-none"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Open main menu</span>
-              {isMenuOpen ? (
-                <X className="block h-6 w-6" />
-              ) : (
-                <Menu className="block h-6 w-6" />
-              )}
             </button>
+
+            <button
+              type="button"
+              className="p-2 rounded-full text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 focus:outline-none"
+              onClick={() => {
+                const isDark = document.documentElement.classList.contains('dark');
+                dispatch(setTheme(isDark ? 'light' : 'dark'));
+              }}
+              aria-label="Toggle theme"
+            >
+              <div className="w-5 h-5 flex items-center justify-center">
+                <span className="dark:hidden">🌞</span>
+                <span className="hidden dark:inline">🌙</span>
+              </div>
+            </button>
+
+            <Link
+              to="/account"
+              className="p-2 rounded-full text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 focus:outline-none"
+              aria-label="Account"
+            >
+              <User className="h-5 w-5" />
+            </Link>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden ml-2">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 rounded-md text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 focus:outline-none"
+                aria-expanded={isMobileMenuOpen}
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-ios-gray-5">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            {/* Mobile Search */}
-            <div className="px-4 py-2">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-ios-label-tertiary" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="block w-full pl-10 pr-3 py-2 border border-ios-gray-4 rounded-full bg-ios-gray-6 text-ios-label-primary placeholder-ios-label-tertiary focus:outline-none focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-            
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`block px-3 py-2 text-base font-medium rounded-md ${
-                  location.pathname === link.path
-                    ? 'bg-ios-blue text-white'
-                    : 'text-ios-label-primary hover:bg-ios-gray-6'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            <div className="pt-4 border-t border-ios-gray-5">
-              <Link
-                to="/account"
-                className="flex items-center px-3 py-2 text-base font-medium text-ios-label-primary hover:bg-ios-gray-6 rounded-md"
-              >
-                <User className="mr-3 h-6 w-6" />
-                My Account
-              </Link>
-              <Link
-                to="/cart"
-                className="flex items-center px-3 py-2 text-base font-medium text-ios-label-primary hover:bg-ios-gray-6 rounded-md"
-              >
-                <div className="relative mr-3">
-                  <ShoppingCart className="h-6 w-6" />
-                  {cartItemsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-ios-red text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {cartItemsCount}
-                    </span>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 overflow-hidden"
+          >
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navLinks.map((link) => (
+                <div key={link.path}>
+                  <Link
+                    to={link.path}
+                    className={`block px-3 py-2 rounded-md text-base font-medium ${
+                      location.pathname === link.path
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                  {link.children && link.children.length > 0 && (
+                    <div className="pl-4">
+                      {link.children.slice(0, 5).map((category) => (
+                        <Link
+                          key={category.id}
+                          to={`/categories/${category.slug}`}
+                          className="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 rounded-md"
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
                   )}
                 </div>
-                Shopping Cart
-              </Link>
+              ))}
+              
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
+                <Link
+                  to="/account"
+                  className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-md"
+                >
+                  <User className="mr-3 h-6 w-6" />
+                  My Account
+                </Link>
+                <Link
+                  to="/cart"
+                  className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-md"
+                >
+                  <div className="relative mr-3">
+                    <ShoppingCart className="h-6 w-6" />
+                    {cart.items && cart.items.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {cart.items.length}
+                      </span>
+                    )}
+                  </div>
+                  Shopping Cart
+                </Link>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

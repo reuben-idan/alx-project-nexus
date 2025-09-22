@@ -69,6 +69,28 @@ A modern, responsive e-commerce platform for grocery shopping with a focus on us
 
 ## Contributing
 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+
+Project Link: [https://github.com/reuben-idan/alx-project-nexus](https://github.com/reuben-idan/alx-project-nexus)
+
+## Acknowledgments
+
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Vite](https://vitejs.dev/)
+
 Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ## License
@@ -81,4 +103,4 @@ For any questions or feedback, please reach out to [your-email@example.com](mail
 
 ---
 
-Built with ❤️ by [Your Name]
+Built with ❤️ by Reuben Idan
