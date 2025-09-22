@@ -9,6 +9,7 @@ import { selectIsAuthenticated } from './store/slices/authSlice';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import ProductGalleryDemo from './components/products/ProductGalleryDemo';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -101,6 +102,8 @@ const App: React.FC = () => {
               } />
               
               <Route path="*" element={<NotFoundPage />} />
+              {/* Demo route for testing ProductGallery */}
+              <Route path="/demo/gallery" element={<ProductGalleryDemo />} />
             </Route>
           </Routes>
         </Suspense>
