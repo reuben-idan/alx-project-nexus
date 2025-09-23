@@ -63,21 +63,51 @@ export interface Product {
 }
 
 export interface ProductFilterOptions {
-  categories: string[];
-  brands: string[];
-  priceRange: {
+  // Filter by category
+  category?: string;
+  categories?: string[];
+  
+  // Price filtering
+  minPrice?: number;
+  maxPrice?: number;
+  priceRange?: {
     min: number;
     max: number;
   };
-  tags: string[];
-  ratings: number[];
+  
+  // Other filters
+  brands?: string[];
+  tags?: string[];
+  
+  // Rating filtering
+  minRating?: number;
+  ratings?: number[];
+  
+  // Stock and sale status
+  inStock?: boolean;
+  onSale?: boolean;
+  
+  // Search
+  search?: string;
+  
+  // Sorting
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  
+  // Pagination
+  page?: number;
+  limit?: number;
 }
 
-export interface ProductSortOption {
-  value: string;
-  label: string;
-  sortFn: (a: Product, b: Product) => number;
-}
+export type ProductSortOption = 
+  | 'featured' 
+  | 'newest' 
+  | 'price-asc' 
+  | 'price-desc' 
+  | 'name-asc' 
+  | 'name-desc' 
+  | 'rating' 
+  | 'popular';
 
 export interface PaginatedProducts {
   products: Product[];

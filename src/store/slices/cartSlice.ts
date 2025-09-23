@@ -87,57 +87,56 @@ const cartSlice = createSlice({
     // Add item to cart or update quantity if already exists
     addToCart: (state, action: PayloadAction<{ product: Product; quantity?: number; variantId?: string }>) => {
       const { product, quantity = 1, variantId } = action.payload;
+      const now = new Date().toISOString();
+      
+      // Find existing item
       const existingItemIndex = state.items.findIndex(
         (item) => item.productId === product.id && item.variantId === variantId
       );
       
+      // Get variant if exists
       const variant = variantId 
         ? product.variants?.find(v => v.id === variantId)
         : null;
       
-      const price = variant?.price ?? product.price;
-      const stock = variant?.stock ?? product.stock;
-      
       if (existingItemIndex >= 0) {
-        // Update quantity if item already in cart
-        const newQuantity = state.items[existingItemIndex].quantity + quantity;
-        if (newQuantity <= stock) {
-          state.items[existingItemIndex].quantity = newQuantity;
-          state.items[existingItemIndex].updatedAt = new Date().toISOString();
-        }
+        // Update quantity if item exists
+        state.items[existingItemIndex].quantity += quantity;
+        state.items[existingItemIndex].updatedAt = now;
       } else {
-        // Add new item to cart
-        const newItem: CartItem = {
+        // Create new cart item
+        const cartItem: CartItem = {
           id: `${product.id}-${variantId || 'default'}`,
           productId: product.id,
-          variantId,
-          name: product.name,
-          price,
-          originalPrice: product.originalPrice,
+          variantId: variant?.id,
+          name: variant ? `${product.name} - ${variant.name}` : product.name,
+          price: variant?.price ?? product.price,
+          originalPrice: variant?.originalPrice ?? product.originalPrice,
           quantity,
-          image: product.images[0]?.url,
-          stock,
-          sku: variant?.sku || product.sku,
+          image: variant?.images?.[0]?.url ?? product.images?.[0]?.url ?? '',
+          stock: variant?.stock ?? product.stock ?? 0,
+          sku: variant?.sku ?? product.sku ?? '',
           weight: variant?.weight,
           product: {
             id: product.id,
             name: product.name,
             slug: product.slug,
-            stock,
-            variants: product.variants,
+            stock: product.stock ?? 0,
+            variants: product.variants || [],
           },
           variant: variant || undefined,
-          isAvailable: stock > 0,
-          addedAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          isAvailable: (variant?.stock ?? product.stock ?? 0) > 0,
+          addedAt: now,
+          updatedAt: now,
         };
         
-        state.items.push(newItem);
+        // Add new item to cart
+        state.items.push(cartItem);
       }
       
-      // Recalculate summary
+      // Recalculate cart summary
       state.summary = calculateSummary(state.items);
-      state.lastUpdated = new Date().toISOString();
+      state.lastUpdated = now;
       
       // Save to localStorage
       saveCartToStorage(state);

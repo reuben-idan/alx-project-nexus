@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { AppDispatch, RootState } from '../store';
 import { fetchProducts } from '../store/slices/productsSlice';
 import { addToCart } from '../store/slices/cartSlice';
@@ -23,7 +22,7 @@ const ProductsPage = () => {
     category: '',
     minPrice: 0,
     maxPrice: 1000,
-    rating: 0,
+    minRating: 0,
     inStock: false,
     onSale: false,
   });
@@ -36,12 +35,20 @@ const ProductsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await dispatch(fetchProducts({
+        const params = {
           page: currentPage,
           limit: itemsPerPage,
           sortBy,
+          sortOrder: sortBy.endsWith('-desc') ? 'desc' : 'asc',
           ...filters,
-        }));
+        };
+        
+        // Remove undefined values
+        Object.keys(params).forEach(key => 
+          params[key as keyof typeof params] === undefined && delete params[key as keyof typeof params]
+        );
+        
+        await dispatch(fetchProducts(params));
       } catch (err) {
         console.error('Error fetching products:', err);
       }
@@ -50,24 +57,25 @@ const ProductsPage = () => {
     fetchData();
   }, [dispatch, currentPage, itemsPerPage, sortBy, filters]);
 
-  // Handle adding product to cart
+  // Handle add to cart
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.images[0]?.url || '',
+      productId: product.id,
+      product,
       quantity: 1,
-      stock: product.stock,
+      price: product.price,
     }));
   };
 
   // Handle filter changes
   const handleFilterChange = (newFilters: Partial<ProductFilterOptions>) => {
-    setFilters(prev => ({
-      ...prev,
-      ...newFilters,
-    }));
+    setFilters(prev => {
+      const updatedFilters = {
+        ...prev,
+        ...newFilters,
+      };
+      return updatedFilters;
+    });
     setCurrentPage(1); // Reset to first page when filters change
   };
 
@@ -144,13 +152,12 @@ const ProductsPage = () => {
             {/* Sort and Results Count */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
               <p className="text-gray-600">
-                Showing {pagination?.totalItems ? (currentPage - 1) * itemsPerPage + 1 : 0} -{' '}
-                {Math.min(currentPage * itemsPerPage, pagination?.totalItems || 0)} of {pagination?.totalItems || 0} products
+                Showing {pagination?.total ? (currentPage - 1) * itemsPerPage + 1 : 0} -{' '}
+                {Math.min(currentPage * itemsPerPage, pagination?.total || 0)} of {pagination?.total || 0} products
               </p>
-              <ProductSort 
-                sortBy={sortBy}
-                onSortChange={handleSortChange}
-              />
+              <div className="w-full md:w-auto">
+                <ProductSort sortBy={sortBy} onSortChange={handleSortChange} />
+              </div>
             </div>
 
             {/* Loading State */}
@@ -191,7 +198,7 @@ const ProductsPage = () => {
 
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
-              <div className="mt-12 flex justify-center">
+              <div className="mt-8">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={pagination.totalPages}
