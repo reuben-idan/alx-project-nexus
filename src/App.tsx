@@ -12,6 +12,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import ProductGalleryDemo from './components/products/ProductGalleryDemo';
 import CategoriesPage from './pages/CategoriesPage';
 import CategoryDetailPage from './pages/CategoryDetailPage';
+const NewArrivalsPage = lazy(() => import('./pages/NewArrivalsPage'));
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -66,6 +67,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="products" element={<ProductsPage />} />
+              <Route path="new-arrivals" element={<NewArrivalsPage />} />
               <Route path="products/:id" element={<ProductDetailPage />} />
               <Route path="categories" element={<CategoriesPage />} />
               <Route path="categories/:slug" element={<CategoryDetailPage />} />
