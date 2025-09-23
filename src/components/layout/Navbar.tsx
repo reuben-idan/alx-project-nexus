@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Search, User, Menu, X, ChevronDown, LogOut } from 'lucide-react';
+import Logo from '../ui/Logo';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
@@ -72,39 +73,38 @@ const Navbar: React.FC = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center group">
               <div className="glass-card rounded-2xl p-1 mr-3 group-hover:scale-105 transition-transform duration-300 flex items-center">
-                <img src="/logo.png" alt="Everything Grocery logo" className="h-8 w-auto rounded-lg object-contain" />
+                <Logo className="h-8 w-auto rounded-lg object-contain" />
               </div>
               <span className="glass-title text-xl">Everything Grocery</span>
             </Link>
           </div>
+                <span className="glass-title text-xl">Everything Grocery</span>
+              </Link>
+            </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {navLinks.map((link) => {
-              return (
-                <div key={link.path} className="relative group">
-                  <Link
-                    to={link.path}
-                    className={`glass-nav-item ${
-                      location.pathname === link.path ? 'glass-nav-item-active' : ''
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      {link.name}
-                      {link.children && (
-                        <ChevronDown className="ml-1 h-4 w-4 transition-transform group-hover:rotate-180" />
-                      )}
-                    </div>
-                  </Link>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-1">
+              {navLinks.map((link) => {
+                return (
+                  <div key={link.path} className="relative group">
+                    <Link
+                      to={link.path}
+                      className={`glass-nav-item ${location.pathname === link.path ? 'glass-nav-item-active' : ''}`}
+                    >
+                      <div className="flex items-center">
+                        {link.name}
+                        {link.children && (
+                          <ChevronDown className="ml-1 h-4 w-4 transition-transform group-hover:rotate-180" />
+                        )}
+                      </div>
+                    </Link>
 
-                  {/* Dropdown Menu removed as requested */}
-                </div>
-              );
-            })}
-          </nav>
+                    {/* Dropdown Menu removed as requested */}
+                  </div>
+                );
+              })}
+            </nav>
 
-          {/* Right side icons */}
-          <div className="flex items-center space-x-3">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
