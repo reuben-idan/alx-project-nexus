@@ -1,4 +1,3 @@
-import React from 'react';
 import ProductGallery from './ProductGallery';
 
 const ProductGalleryDemo = () => {

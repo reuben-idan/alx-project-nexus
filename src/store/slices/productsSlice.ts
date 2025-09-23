@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { Product, PaginatedProducts, ProductFilterOptions } from '../../../types/product';
+import { Product, PaginatedProducts, ProductFilterOptions } from '../../types/product';
 import { RootState } from '../store';
-import productService from '../../../services/api/products';
+import productService from '../../services/api/products';
 
 export interface ProductsState {
   products: Product[];
@@ -73,20 +73,12 @@ const initialState: ProductsState = {
   },
 };
 
-// Async Thunks
 export const fetchProducts = createAsyncThunk<
   PaginatedProducts,
-  void,
-  { state: RootState }
->('products/fetchProducts', async (_, { getState, rejectWithValue }) => {
+  { page?: number; limit?: number; [key: string]: any },
+  { rejectValue: string }
+>('products/fetchProducts', async (params = {}, { rejectWithValue }) => {
   try {
-    const { filters, pagination } = getState().products;
-    const params = {
-      ...filters,
-      page: pagination.page,
-      limit: pagination.limit,
-    };
-    
     const response = await productService.getProducts(params);
     return response;
   } catch (error: any) {

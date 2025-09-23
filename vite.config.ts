@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { resolve } from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,6 +30,13 @@ export default defineConfig({
         ],
       },
     }),
+    // Bundle analyzer - generates stats.html
+    visualizer({
+      filename: 'dist/stats.html',
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+    }),
   ],
   resolve: {
     alias: {
@@ -42,5 +50,23 @@ export default defineConfig({
   preview: {
     port: 3000,
     open: true,
+  },
+  // Optimize build for production
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunks for better caching
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['@radix-ui/react-tabs', '@radix-ui/react-slot', '@radix-ui/react-dropdown-menu'],
+          animations: ['framer-motion'],
+          state: ['@reduxjs/toolkit', 'react-redux'],
+        },
+      },
+    },
+    // Enable source maps for better debugging
+    sourcemap: true,
+    // Optimize chunk size
+    chunkSizeWarningLimit: 1000,
   },
 });

@@ -2,29 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* iOS Fonts */
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* Apple Water-Glass 2026 Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
+:root {
+  /* Glassmorphic Design Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: rgba(0, 0, 0, 0.12);
+  --glass-blur: blur(20px);
+  --glass-saturation: saturate(180%);
+  --water-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
 }
 
 /* Base styles */
@@ -37,111 +26,136 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-ios-background-primary text-ios-label-primary font-sf-pro text-base leading-relaxed;
-    overscroll-behavior-y: none;
-    -webkit-overflow-scrolling: touch;
+    @apply bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white font-['Inter'] overflow-x-hidden;
+    background-attachment: fixed;
+    min-height: 100vh;
   }
 
-  /* iOS-like scrollbar */
+  /* Modern scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-ios-gray-4 rounded-full;
+    @apply bg-glass-400 rounded-full border-2 border-glass-200;
+    background-clip: padding-box;
   }
 
   ::-webkit-scrollbar-track {
     @apply bg-transparent;
   }
 
-  /* iOS-like selection */
+  /* Glass selection */
   ::selection {
-    @apply bg-ios-blue bg-opacity-20 text-ios-blue;
+    @apply bg-water-400/30 text-white;
   }
 }
 
 /* Components */
 @layer components {
-  /* iOS-like buttons */
+  /* Modern Glassmorphic Buttons */
   .btn {
-    @apply inline-flex items-center justify-center rounded-ios px-4 py-2 text-center font-medium transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue disabled:opacity-60 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center rounded-2xl px-6 py-3 text-center font-semibold transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none relative overflow-hidden;
   }
 
-  .btn-primary {
-    @apply bg-ios-blue text-white hover:bg-opacity-90 focus:ring-ios-blue/50;
+  .btn::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 -translate-x-full transition-all duration-700 ease-out;
   }
 
-  .btn-secondary {
-    @apply bg-ios-gray-5 text-ios-label-primary hover:bg-opacity-80 focus:ring-ios-gray-4/50;
+  .btn:hover::before {
+    @apply opacity-100 translate-x-full;
   }
 
-  .btn-outline {
-    @apply border border-ios-gray-4 bg-transparent hover:bg-ios-gray-6 focus:ring-ios-gray-4/50;
+  .btn-glass {
+    @apply bg-glass-300/20 backdrop-blur-xl border border-glass-400 shadow-glass hover:bg-glass-400/30 hover:shadow-glass-md text-white;
   }
 
-  /* iOS-like cards */
-  .card {
-    @apply bg-ios-background-primary rounded-ios shadow-ios overflow-hidden transition-all duration-200 ease-in-out;
+  .btn-water {
+    @apply bg-gradient-to-r from-water-500 to-water-600 text-white shadow-glass hover:shadow-glass-md hover:scale-105;
   }
 
-  .card-hover {
-    @apply hover:shadow-ios-md transform hover:-translate-y-0.5;
+  .btn-outline-glass {
+    @apply bg-transparent backdrop-blur-xl border-2 border-glass-500 text-white hover:bg-glass-300/20 hover:border-glass-600;
   }
 
-  /* iOS-like inputs */
-  .input {
-    @apply w-full rounded-ios border border-ios-gray-4 bg-ios-background-primary px-4 py-3 text-ios-label-primary placeholder-ios-label-tertiary focus:border-ios-blue focus:ring-2 focus:ring-ios-blue/20 focus:outline-none transition-colors duration-200 ease-in-out;
+  /* Glassmorphic Cards */
+  .glass-card {
+    @apply bg-glass-200/20 backdrop-blur-2xl border border-glass-300/30 rounded-3xl shadow-glass p-6 relative overflow-hidden;
   }
 
-  /* iOS-like badges */
-  .badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  .glass-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-glass-100/10 via-transparent to-glass-200/5 pointer-events-none;
   }
 
-  .badge-primary {
-    @apply bg-ios-blue/10 text-ios-blue;
+  .glass-card-hover {
+    @apply hover:bg-glass-300/30 hover:shadow-glass-lg hover:scale-[1.02] transition-all duration-300;
   }
 
-  .badge-secondary {
-    @apply bg-ios-gray-5 text-ios-label-secondary;
+  /* Modern Inputs */
+  .glass-input {
+    @apply w-full bg-glass-200/10 backdrop-blur-xl border border-glass-400/40 rounded-2xl px-4 py-3 text-white placeholder-glass-600 focus:border-water-400 focus:ring-2 focus:ring-water-400/20 focus:outline-none transition-all duration-300;
   }
 
-  /* iOS-like section headers */
-  .section-header {
-    @apply text-sm font-medium text-ios-label-secondary uppercase tracking-wider mb-3 px-4;
+  /* Glassmorphic Navigation */
+  .glass-nav {
+    @apply bg-glass-200/10 backdrop-blur-2xl border-b border-glass-300/20 sticky top-0 z-50;
   }
 
-  /* iOS-like list items */
-  .list-item {
-    @apply flex items-center justify-between px-4 py-3 bg-ios-background-primary border-b border-ios-gray-5 last:border-0 transition-colors duration-200 ease-in-out active:bg-ios-gray-6;
+  /* Floating Action Button */
+  .fab {
+    @apply fixed bottom-8 right-8 w-14 h-14 rounded-full bg-gradient-to-r from-water-500 to-water-600 text-white shadow-glass-lg flex items-center justify-center hover:scale-110 transition-all duration-300 z-50;
   }
 
-  /* iOS-like modal */
-  .modal-overlay {
-    @apply fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+  /* Glassmorphic Modal */
+  .glass-modal {
+    @apply fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4;
   }
 
-  .modal-content {
-    @apply bg-ios-background-primary rounded-ios-lg w-full max-w-md max-h-[90vh] overflow-y-auto shadow-ios-xl animate-scale-in;
+  .glass-modal-content {
+    @apply bg-glass-200/20 backdrop-blur-2xl border border-glass-300/30 rounded-3xl shadow-glass-xl w-full max-w-md max-h-[90vh] overflow-y-auto relative;
   }
 
-  /* iOS-like sheet */
-  .sheet-overlay {
-    @apply fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end justify-center;
+  .glass-modal-content::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-glass-100/20 via-transparent to-glass-200/10 rounded-3xl pointer-events-none;
   }
 
-  .sheet-content {
-    @apply bg-ios-background-tertiary rounded-t-2xl w-full max-w-lg mx-auto shadow-ios-2xl animate-slide-up;
+  /* Water-inspired gradients */
+  .water-gradient {
+    background: var(--water-gradient);
   }
 
-  /* iOS-like toast */
-  .toast {
-    @apply bg-ios-label-primary text-white px-4 py-3 rounded-ios shadow-ios-lg flex items-center space-x-3;
+  .glass-gradient {
+    background: var(--glass-gradient);
+  }
+
+  /* Animated backgrounds */
+  .animated-bg {
+    @apply relative overflow-hidden;
+  }
+
+  .animated-bg::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-glass-300/10 to-transparent opacity-50;
+    animation: shimmer 3s linear infinite;
+    background-size: 200% 100%;
+  }
+
+  /* Floating elements */
+  .float-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Pulse glass effect */
+  .pulse-glass {
+    animation: pulseGlass 2s ease-in-out infinite;
   }
 }
 
@@ -209,35 +223,202 @@
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
 
-/* iOS-like text styles */
-.text-large-title {
-  @apply text-3xl font-semibold tracking-tight;
+/* Glassmorphic Typography */
+.glass-title {
+  @apply text-4xl font-bold bg-gradient-to-r from-white via-water-200 to-white bg-clip-text text-transparent;
+  text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
 }
 
-.text-title-1 {
-  @apply text-2xl font-semibold tracking-tight;
+.glass-subtitle {
+  @apply text-xl font-medium text-glass-700;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
-.text-title-2 {
-  @apply text-xl font-semibold tracking-tight;
+.glass-text {
+  @apply text-glass-600 leading-relaxed;
 }
 
-.text-title-3 {
-  @apply text-lg font-semibold tracking-tight;
+/* Interactive Elements */
+.glass-button {
+  @apply bg-glass-300/20 backdrop-blur-xl border border-glass-400/50 rounded-2xl px-6 py-3 text-white font-semibold transition-all duration-300 hover:bg-glass-400/30 hover:border-glass-500/70 hover:shadow-glass-md hover:scale-105;
 }
 
-.text-headline {
-  @apply text-base font-semibold;
+.glass-button::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 -translate-x-full rounded-2xl transition-all duration-500;
 }
 
-.text-subheadline {
-  @apply text-sm font-medium text-ios-label-secondary;
+.glass-button:hover::before {
+  @apply opacity-100 translate-x-full;
 }
 
-.text-caption-1 {
-  @apply text-sm text-ios-label-secondary;
+/* Floating Cards */
+.floating-card {
+  @apply bg-glass-200/15 backdrop-blur-2xl border border-glass-300/20 rounded-3xl shadow-glass p-8 relative overflow-hidden;
+  animation: glass-in 0.6s ease-out;
 }
 
-.text-caption-2 {
-  @apply text-xs text-ios-label-tertiary;
+.floating-card::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-water-500/5 via-transparent to-glass-200/10 rounded-3xl pointer-events-none;
+}
+
+/* Progress Indicators */
+.glass-progress {
+  @apply bg-glass-300/20 backdrop-blur-xl rounded-full h-2 overflow-hidden;
+}
+
+.glass-progress-bar {
+  @apply bg-gradient-to-r from-water-400 to-water-500 h-full rounded-full transition-all duration-500 ease-out relative;
+}
+
+.glass-progress-bar::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-opacity duration-300;
+}
+
+.glass-progress:hover .glass-progress-bar::before {
+  @apply opacity-100;
+}
+
+/* Navigation Elements */
+.glass-nav-item {
+  @apply px-4 py-2 rounded-2xl text-glass-600 font-medium transition-all duration-300 hover:text-white hover:bg-glass-300/20;
+}
+
+.glass-nav-item-active {
+  @apply bg-glass-400/30 text-white shadow-glass-sm;
+}
+
+/* Form Elements */
+.glass-form-group {
+  @apply space-y-2;
+}
+
+.glass-label {
+  @apply text-sm font-semibold text-glass-700 mb-2 block;
+}
+
+.glass-checkbox {
+  @apply w-5 h-5 rounded-lg bg-glass-200/20 border-2 border-glass-400/50 backdrop-blur-xl appearance-none cursor-pointer relative;
+}
+
+.glass-checkbox:checked {
+  @apply bg-water-500 border-water-500;
+}
+
+.glass-checkbox:checked::before {
+  content: '✓';
+  @apply absolute inset-0 flex items-center justify-center text-white font-bold text-sm;
+}
+
+/* Loading States */
+.glass-spinner {
+  @apply w-8 h-8 border-2 border-glass-400/30 border-t-water-400 rounded-full animate-spin;
+}
+
+.glass-pulse {
+  animation: pulseGlass 2s ease-in-out infinite;
+}
+
+/* Hover Effects */
+.glass-hover-lift {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-glass-lg;
+}
+
+.glass-hover-glow {
+  @apply transition-all duration-300 hover:shadow-glass-colorful;
+}
+
+/* Background Patterns */
+.water-pattern {
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+}
+
+/* Image Optimization */
+.glass-image {
+  @apply rounded-2xl overflow-hidden relative;
+}
+
+.glass-image img {
+  @apply w-full h-full object-cover transition-all duration-500;
+}
+
+.glass-image::before {
+  content: '';
+  @apply absolute inset-0 bg-glass-300/20 backdrop-blur-sm opacity-0 transition-opacity duration-300 z-10;
+}
+
+.glass-image:hover::before {
+  @apply opacity-100;
+}
+
+/* Lazy loading placeholder */
+.image-placeholder {
+  @apply bg-glass-200/20 backdrop-blur-xl rounded-2xl animate-pulse-glass;
+}
+
+.image-placeholder::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-glass-400/30 to-transparent animate-shimmer;
+}
+
+/* WebP support with fallbacks */
+.webp-supported .glass-image img {
+  content: url('image.webp');
+}
+
+.no-webp .glass-image img {
+  content: url('image.jpg');
+}
+
+/* Responsive images */
+.responsive-image {
+  @apply w-full h-auto;
+}
+
+/* Image aspect ratios */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-3-2 {
+  aspect-ratio: 3 / 2;
+}
+
+/* Image loading states */
+.image-loading {
+  @apply opacity-0 transition-opacity duration-300;
+}
+
+.image-loaded {
+  @apply opacity-100;
+}
+
+.image-error {
+  @apply bg-glass-300/20 backdrop-blur-xl flex items-center justify-center text-glass-600;
+}
+
+.image-error::before {
+  content: '⚠';
+  @apply text-2xl;
+}
+
+/* Optimized image containers */
+.image-container {
+  @apply relative overflow-hidden rounded-2xl;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%),
+              linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
 }

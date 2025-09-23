@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { X, ArrowLeft, Check, CreditCard, Truck, Shield, Lock } from 'lucide-react';
+import { ArrowLeft, Check, Truck, Shield, Lock } from 'lucide-react';
 import { formatCurrency } from '../lib/utils';
 import { clearCart, selectCartItems, selectCartTotal } from '../store/slices/cartSlice';
-import { AppDispatch, RootState } from '../store';
+import { AppDispatch } from '../store';
 import { Button } from '../components/ui/button';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 type FormData = {
   email: string;
@@ -48,7 +48,7 @@ const CheckoutPage = () => {
   
   const paymentMethod = watch('paymentMethod');
   
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit = async () => {
     if (activeStep < 3) {
       setActiveStep(activeStep + 1);
       return;

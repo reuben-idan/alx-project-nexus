@@ -1,5 +1,5 @@
 import { Product } from '../../types/product';
-import { Carousel } from '../ui/Carousel';
+import Carousel from '../ui/Carousel';
 import ProductCard from './ProductCard';
 
 export interface FeaturedProductsProps {

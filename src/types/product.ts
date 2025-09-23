@@ -10,8 +10,10 @@ export interface ProductVariant {
   name: string;
   price: number;
   originalPrice?: number;
+  discount?: number;
   sku: string;
   stock: number;
+  images?: ProductImage[];
   weight?: number;
   dimensions?: {
     length?: number;
@@ -51,6 +53,7 @@ export interface Product {
   tags: string[];
   images: ProductImage[];
   variants?: ProductVariant[];
+  variantType?: string;
   specifications?: Record<string, string>;
   features?: string[];
   isFeatured: boolean;

@@ -48,7 +48,7 @@ const ProductsPage = () => {
           params[key as keyof typeof params] === undefined && delete params[key as keyof typeof params]
         );
         
-        await dispatch(fetchProducts(params));
+        dispatch(fetchProducts(params));
       } catch (err) {
         console.error('Error fetching products:', err);
       }
@@ -60,10 +60,8 @@ const ProductsPage = () => {
   // Handle add to cart
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({
-      productId: product.id,
       product,
       quantity: 1,
-      price: product.price,
     }));
   };
 
@@ -92,7 +90,7 @@ const ProductsPage = () => {
   };
 
   // Loading state
-  if (loading === 'pending' && products.length === 0) {
+  if (loading && products.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner size="lg" />
@@ -161,7 +159,7 @@ const ProductsPage = () => {
             </div>
 
             {/* Loading State */}
-            {loading === 'pending' && (
+            {loading && (
               <div className="flex justify-center my-12">
                 <LoadingSpinner size="md" />
               </div>

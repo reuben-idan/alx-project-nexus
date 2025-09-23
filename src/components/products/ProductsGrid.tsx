@@ -1,7 +1,8 @@
 import { Product } from '../../types/product';
 import ProductCard from './ProductCard';
-import { useAppDispatch } from '../../store/hooks';
+import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/slices/cartSlice';
+import type { AppDispatch } from '../../store/store';
 
 interface ProductsGridProps {
   products: Product[];
@@ -18,16 +19,12 @@ const ProductsGrid = ({
   emptyMessage = 'No products found.',
   className = '',
 }: ProductsGridProps) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
+      product,
       quantity: 1,
-      image: product.images[0]?.url || '',
-      maxQuantity: product.stock,
     }));
   };
 

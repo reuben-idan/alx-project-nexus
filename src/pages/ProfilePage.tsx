@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Camera, User, Mail, Phone, MapPin, Lock, CreditCard, Bell, Shield, LogOut } from 'lucide-react';
+import { Camera, User, Mail, Phone, MapPin, CreditCard, Bell, Shield, LogOut, Package } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
@@ -24,7 +24,6 @@ type FormData = {
 };
 
 const ProfilePage = () => {
-  const [activeTab, setActiveTab] = useState('profile');
   const [avatar, setAvatar] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -82,7 +81,6 @@ const ProfilePage = () => {
           <Tabs 
             defaultValue="profile" 
             className="mt-8"
-            onValueChange={setActiveTab}
           >
             <div className="flex flex-col sm:flex-row gap-8">
               {/* Sidebar Navigation */}

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { CartItem, CartState, CartSummary, ShippingAddress, BillingAddress, PaymentMethod, Coupon } from '../../../types/cart';
-import { Product } from '../../../types/product';
+import { CartItem, CartState, CartSummary, ShippingAddress, BillingAddress, PaymentMethod, Coupon } from '../../types/cart';
+import { Product } from '../../types/product';
 import { RootState } from '../store';
 
 // Helper function to calculate cart summary
@@ -241,6 +241,7 @@ const cartSlice = createSlice({
 // Selectors
 export const selectCartItems = (state: RootState) => state.cart.items;
 export const selectCartSummary = (state: RootState) => state.cart.summary;
+export const selectCartTotal = (state: RootState) => state.cart.summary.total;
 export const selectCartLoading = (state: RootState) => state.cart.isLoading;
 export const selectCartError = (state: RootState) => state.cart.error;
 export const selectCartLastUpdated = (state: RootState) => state.cart.lastUpdated;

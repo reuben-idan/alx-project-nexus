@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { ArrowRight, Check, Clock, X, Package, Truck, CheckCircle, RefreshCw } from 'lucide-react';
+import { X, Package, Truck, CheckCircle, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../lib/utils';
 import { Button } from '../components/ui/button';

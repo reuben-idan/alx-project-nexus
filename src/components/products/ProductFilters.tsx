@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { ProductFilterOptions } from '../../types/product';
 import { Slider } from '../ui/slider';
 import { Checkbox } from '../ui/checkbox';
-import { Button } from '../ui/button';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
 
 interface ProductFiltersProps {

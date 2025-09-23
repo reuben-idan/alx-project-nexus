@@ -92,7 +92,7 @@ const ProductDetail = ({
                 ${originalPrice.toFixed(2)}
               </span>
             )}
-            {discount > 0 && (
+            {discount && discount > 0 && (
               <span className="ml-2 px-2 py-1 text-xs font-semibold bg-red-100 text-red-800 rounded-full">
                 {discount}% OFF
               </span>

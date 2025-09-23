@@ -15,47 +15,38 @@ export default {
         'sf-pro-text': ['SF Pro Text', 'sans-serif'],
       },
       colors: {
-        // iOS System Colors
-        ios: {
-          blue: '#007AFF',
-          green: '#34C759',
-          indigo: '#5856D6',
-          orange: '#FF9500',
-          pink: '#FF2D55',
-          purple: '#AF52DE',
-          red: '#FF3B30',
-          teal: '#5AC8FA',
-          yellow: '#FFCC00',
-          // Grayscale
-          gray: {
-            1: '#8E8E93',
-            2: '#AEAEB2',
-            3: '#C7C7CC',
-            4: '#D1D1D6',
-            5: '#E5E5EA',
-            6: '#F2F2F7',
-          },
-          // Backgrounds
-          background: {
-            primary: '#FFFFFF',
-            secondary: '#F2F2F7',
-            tertiary: '#FFFFFF',
-          },
-          // Labels
-          label: {
-            primary: '#000000',
-            secondary: '#3C3C4399', // 60% opacity
-            tertiary: '#3C3C434D', // 30% opacity
-            quaternary: '#3C3C432D', // 18% opacity
-          },
-          // Fill
-          fill: {
-            primary: '#78788033', // 20% opacity
-            secondary: '#78788029', // 16% opacity
-            tertiary: '#7676801F', // 12% opacity
-            quaternary: '#74748014', // 8% opacity
-          },
+        // Apple Glass 2026 Design System
+        glass: {
+          50: 'rgba(255, 255, 255, 0.05)',
+          100: 'rgba(255, 255, 255, 0.1)',
+          200: 'rgba(255, 255, 255, 0.15)',
+          300: 'rgba(255, 255, 255, 0.2)',
+          400: 'rgba(255, 255, 255, 0.25)',
+          500: 'rgba(255, 255, 255, 0.3)',
+          600: 'rgba(255, 255, 255, 0.4)',
+          700: 'rgba(255, 255, 255, 0.5)',
+          800: 'rgba(255, 255, 255, 0.6)',
+          900: 'rgba(255, 255, 255, 0.7)',
         },
+        // Water-inspired colors
+        water: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        // Glass morphism colors
+        'glass-blue': 'rgba(59, 130, 246, 0.1)',
+        'glass-purple': 'rgba(147, 51, 234, 0.1)',
+        'glass-green': 'rgba(16, 185, 129, 0.1)',
+        'glass-orange': 'rgba(249, 115, 22, 0.1)',
+        'glass-pink': 'rgba(236, 72, 153, 0.1)',
       },
       // iOS-like shadows
       boxShadow: {
@@ -65,6 +56,15 @@ export default {
         'ios-lg': '0 10px 30px rgba(0, 0, 0, 0.15)',
         'ios-xl': '0 15px 40px rgba(0, 0, 0, 0.12)',
         'ios-2xl': '0 20px 50px rgba(0, 0, 0, 0.15)',
+        // Glassmorphic shadows
+        'glass-sm': '0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+        'glass': '0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+        'glass-md': '0 12px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+        'glass-lg': '0 16px 48px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+        'glass-xl': '0 20px 56px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+        'glass-2xl': '0 24px 64px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+        'glass-inner': 'inset 0 8px 32px rgba(0, 0, 0, 0.12)',
+        'glass-colorful': '0 8px 32px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
       },
       // iOS-like border radius
       borderRadius: {
@@ -89,6 +89,12 @@ export default {
         'scale-out': 'scaleOut 200ms ease-in',
         'slide-up': 'slideUp 200ms ease-out',
         'slide-down': 'slideDown 200ms ease-in',
+        // Glassmorphic animations
+        'glass-in': 'glassIn 600ms ease-out',
+        'glass-out': 'glassOut 300ms ease-in',
+        'shimmer': 'shimmer 2s linear infinite',
+        'pulse-glass': 'pulseGlass 2s ease-in-out infinite',
+        'float': 'float 6s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -114,6 +120,28 @@ export default {
         slideDown: {
           '0%': { transform: 'translateY(0)', opacity: '1' },
           '100%': { transform: 'translateY(20px)', opacity: '0' },
+        },
+        // Glassmorphic keyframes
+        glassIn: {
+          '0%': { opacity: '0', transform: 'scale(0.8) translateY(20px)' },
+          '50%': { opacity: '0.5', transform: 'scale(0.9) translateY(-5px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+        },
+        glassOut: {
+          '0%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+          '100%': { opacity: '0', transform: 'scale(0.8) translateY(-20px)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        pulseGlass: {
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '0.9' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
       },
     },

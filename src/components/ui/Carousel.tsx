@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, ReactNode } from 'react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { motion, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export interface CarouselProps<T> {
@@ -29,7 +29,6 @@ const Carousel = <T,>({
   const [isDragging, setIsDragging] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
-  const [itemWidth, setItemWidth] = useState(0);
   const [visibleItems, setVisibleItems] = useState(1);
 
   // Calculate number of visible items based on container width
@@ -37,10 +36,8 @@ const Carousel = <T,>({
     const updateDimensions = () => {
       if (carouselRef.current && itemRef.current) {
         const containerWidth = carouselRef.current.offsetWidth;
-        const itemWidth = itemRef.current.offsetWidth || 200; // Default to 200px if ref not ready
-        const newVisibleItems = Math.max(1, Math.floor(containerWidth / itemWidth));
+        const newVisibleItems = Math.max(1, Math.floor(containerWidth / (itemRef.current.offsetWidth || 200)));
         
-        setItemWidth(itemWidth);
         setVisibleItems(newVisibleItems);
       }
     };
@@ -87,7 +84,7 @@ const Carousel = <T,>({
     setIsDragging(true);
   };
 
-  const handleDragEnd = (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     setIsDragging(false);
     
     // Only trigger slide change if drag distance is significant
@@ -99,11 +96,6 @@ const Carousel = <T,>({
       }
     }
   };
-
-  // Calculate the range of items to display
-  const startIndex = Math.max(0, Math.min(currentIndex, items.length - visibleItems));
-  const endIndex = Math.min(startIndex + visibleItems, items.length);
-  const displayItems = items.slice(startIndex, endIndex);
 
   // Adjust the carousel position based on the current index
   const carouselStyle = {

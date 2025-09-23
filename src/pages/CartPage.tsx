@@ -1,32 +1,32 @@
 import { Link } from 'react-router-dom';
 import { X, Plus, Minus, ArrowLeft, ShoppingCart, Truck, Shield, RefreshCw } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatCurrency } from '../lib/utils';
-import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
-import { AppDispatch, RootState } from '../store';
+import { formatCurrency } from '../utils/format';
 import { 
   removeFromCart, 
   updateCartItemQuantity,
   clearCart,
   selectCartItems,
-  selectCartTotal,
-  selectCartItemCount
+  selectCartTotal
 } from '../store/slices/cartSlice';
+import { AppDispatch } from '../store';
+import { Button } from '../components/ui/button';
 
 type CartItemProps = {
   id: string;
+  productId: string;
   name: string;
   price: number;
   quantity: number;
-  image: string;
+  image?: string;
   stock: number;
-  onRemove: (id: string) => void;
-  onUpdateQuantity: (id: string, quantity: number) => void;
+  onRemove: (productId: string) => void;
+  onUpdateQuantity: (productId: string, quantity: number) => void;
 };
 
 const CartItem = ({
   id,
+  productId,
   name,
   price,
   quantity,
@@ -37,13 +37,13 @@ const CartItem = ({
 }: CartItemProps) => {
   const handleIncrement = () => {
     if (quantity < stock) {
-      onUpdateQuantity(id, quantity + 1);
+      onUpdateQuantity(productId, quantity + 1);
     }
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      onUpdateQuantity(id, quantity - 1);
+      onUpdateQuantity(productId, quantity - 1);
     }
   };
 
@@ -93,7 +93,7 @@ const CartItem = ({
           
           <button
             type="button"
-            onClick={() => onRemove(id)}
+            onClick={() => onRemove(productId)}
             className="ml-4 text-sm font-medium text-red-600 hover:text-red-500 sm:mt-2"
           >
             <X className="h-5 w-5" />
@@ -107,7 +107,6 @@ const CartItem = ({
 const CartPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector(selectCartItems);
-  const itemCount = useSelector(selectCartItemCount);
   const total = useSelector(selectCartTotal);
   
   const shipping = total > 50 || total === 0 ? 0 : 5.99;
@@ -119,7 +118,7 @@ const CartPage = () => {
   };
 
   const handleUpdateQuantity = (productId: string, quantity: number) => {
-    dispatch(updateCartItemQuantity({ id: productId, quantity }));
+    dispatch(updateCartItemQuantity({ itemId: productId, quantity }));
   };
 
   const handleClearCart = () => {

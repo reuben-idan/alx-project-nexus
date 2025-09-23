@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, PanInfo, useAnimation } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react';
 
 // Types
 type ImageType = {
@@ -62,7 +62,6 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  const controls = useAnimation();
 
   // Auto-play functionality
   useEffect(() => {
@@ -106,7 +105,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   }, [images.length]);
 
   // Handle swipe gestures
-  const handleDragEnd = useCallback((e: MouseEvent | TouchEvent | PointerEvent, { offset, velocity }: PanInfo) => {
+  const handleDragEnd = useCallback((_: MouseEvent | TouchEvent | PointerEvent, { offset, velocity }: PanInfo) => {
     const swipe = swipePower(offset.x, velocity.x);
 
     if (swipe < -swipeConfidenceThreshold) {
@@ -140,7 +139,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   }, [currentIndex, isZoomed, onImageClick]);
 
   // Handle pan when zoomed
-  const handlePan = useCallback((e: any, info: any) => {
+  const handlePan = useCallback((_: any, info: any) => {
     if (!isZoomed) return;
     
     setPosition(prev => {

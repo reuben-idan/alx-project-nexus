@@ -43,19 +43,15 @@ const ProductDetailPage = () => {
       setIsAddingToCart(true);
       
       // Calculate final price considering discount
-      const finalPrice = product.discount > 0 
+      const finalPrice = product.discount && product.discount > 0 
         ? product.price * (1 - product.discount / 100) 
         : product.price;
       
       // Dispatch add to cart action
       await dispatch(addToCart({
         product: {
-          id: product.id,
-          name: product.name,
-          price: finalPrice,
-          image: product.images?.[0]?.url || '',
-          stock: product.stock,
-          sku: product.sku || '',
+          ...product,
+          price: finalPrice, // Override with discounted price
         },
         quantity,
       }));
@@ -148,7 +144,5 @@ const ProductDetailPage = () => {
     </div>
   );
 };
-
-export default ProductDetailPage;
 
 export default ProductDetailPage;

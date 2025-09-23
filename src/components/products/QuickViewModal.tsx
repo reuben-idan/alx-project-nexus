@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import { useState } from 'react';
 import { Product } from '../../types/product';
 import { formatCurrency } from '../../utils/format';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface QuickViewModalProps {
   product: Product;
@@ -174,7 +174,7 @@ const QuickViewModal = ({ product, isOpen, onClose, onAddToCart }: QuickViewModa
                           {formatCurrency(price)}
                         </span>
                         <span className="ml-3 text-xl text-gray-500 line-through">
-                          {formatCurrency(originalPrice)}
+                          {formatCurrency(originalPrice || price)}
                         </span>
                         <span className="ml-3 bg-red-100 text-red-600 text-sm font-medium px-2.5 py-0.5 rounded">
                           -{discount}%
