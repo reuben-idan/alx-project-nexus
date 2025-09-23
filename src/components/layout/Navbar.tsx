@@ -2,9 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Search, User, Menu, X, ChevronDown } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { toggleCart, toggleSearch, setTheme } from '../../store/slices/uiSlice';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// Memoized selector to prevent unnecessary re-renders
+const selectCartItems = createSelector(
+  (state: RootState) => state.cart.items,
+  (items) => items
+);
 
 interface Category {
   id: string;
@@ -32,9 +39,7 @@ const Navbar: React.FC = () => {
     { id: '5', name: 'Beverages', slug: 'beverages' },
   ];
 
-  const { cart } = useSelector((state: RootState) => ({
-    cart: state.cart,
-  }));
+  const cartItems = useSelector(selectCartItems);
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -143,13 +148,13 @@ const Navbar: React.FC = () => {
               aria-label="Shopping Cart"
             >
               <ShoppingCart className="h-5 w-5" />
-              {cart.items && cart.items.length > 0 && (
+              {cartItems && cartItems.length > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   className="absolute -top-1 -right-1 bg-water-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
                 >
-                  {cart.items.length}
+                  {cartItems.length}
                 </motion.span>
               )}
             </motion.button>
@@ -257,9 +262,9 @@ const Navbar: React.FC = () => {
                 >
                   <div className="relative mr-3">
                     <ShoppingCart className="h-6 w-6" />
-                    {cart.items && cart.items.length > 0 && (
+                    {cartItems && cartItems.length > 0 && (
                       <span className="absolute -top-1 -right-1 bg-water-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                        {cart.items.length}
+                        {cartItems.length}
                       </span>
                     )}
                   </div>
