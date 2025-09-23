@@ -100,9 +100,9 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
     filters.onSale !== undefined;
 
   return (
-    <div className="glass-card backdrop-blur-xl shadow-glass p-6 rounded-2xl space-y-6">
+  <div className="glass-card backdrop-blur-xl shadow-glass p-6 rounded-2xl space-y-6 bg-gradient-to-br from-white/70 via-green-50 to-green-100 border border-green-200">
       <div className="flex items-center justify-between">
-        <h3 className="glass-title text-lg font-semibold">Filters</h3>
+        <h3 className="glass-title text-lg font-semibold text-green-700 drop-shadow">Filters</h3>
         {hasActiveFilters && (
           <button 
             onClick={clearAllFilters}
@@ -115,12 +115,12 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Categories */}
-      <div className="border-b border-glass-300/20 pb-4">
+  <div className="border-b border-green-200/40 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('category')}
         >
-          <span>Categories</span>
+          <span className="text-green-700">Categories</span>
           {openSections.category ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
         
@@ -135,7 +135,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
                 />
                 <label 
                   htmlFor={`cat-${category}`}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-semibold leading-none text-green-900 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 drop-shadow-sm"
                 >
                   {category}
                 </label>
@@ -146,12 +146,12 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Price Range */}
-      <div className="border-b border-glass-300/20 pb-4">
+  <div className="border-b border-green-200/40 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('price')}
         >
-          <span>Price Range</span>
+          <span className="text-green-700">Price Range</span>
           {openSections.price ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
         
@@ -174,17 +174,17 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Rating */}
-      <div className="border-b border-glass-300/20 pb-4">
+  <div className="border-b border-yellow-200/40 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('rating')}
         >
-          <span>Rating</span>
+          <span className="text-yellow-800">Rating</span>
           {openSections.rating ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
         
         {openSections.rating && (
-          <div className="mt-2 space-y-2">
+          <div className="mt-2 space-y-2 bg-gradient-to-r from-yellow-50 via-yellow-100 to-white/80 rounded-xl p-2">
             {[4, 3, 2, 1].map((rating) => (
               <div key={rating} className="flex items-center space-x-2">
                 <Checkbox 
@@ -196,7 +196,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
-                      className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-glass-600'}`}
+                      className={`w-4 h-4 ${i < rating ? 'text-yellow-400 drop-shadow' : 'text-glass-400'}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +204,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
-                  <span className="ml-1 text-xs text-glass-600">& Up</span>
+                  <span className="ml-1 text-xs text-yellow-800">& Up</span>
                 </div>
               </div>
             ))}
@@ -213,12 +213,12 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Availability */}
-      <div className="border-b border-glass-300/20 pb-4">
+  <div className="border-b border-purple-200/40 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('availability')}
         >
-          <span>Availability</span>
+          <span className="text-purple-800">Availability</span>
           {openSections.availability ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
         
@@ -232,7 +232,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
               />
               <label 
                 htmlFor="in-stock"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-semibold leading-none text-purple-900 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 drop-shadow-sm"
               >
                 In Stock Only
               </label>
@@ -245,7 +245,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
               />
               <label 
                 htmlFor="on-sale"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-semibold leading-none text-purple-900 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 drop-shadow-sm"
               >
                 On Sale
               </label>

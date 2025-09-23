@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { Product, PaginatedProducts, ProductFilterOptions } from '../../types/product';
+import productsMock from '../../mocks/products.mock.json';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 const PRODUCTS_ENDPOINT = `${API_BASE_URL}/products`;
+
+// Helper to detect local dev
+const isLocalDev = window.location.hostname === 'localhost';
 
 export interface GetProductsParams {
   page?: number;
@@ -24,6 +28,22 @@ export interface GetProductsParams {
 export const productService = {
   // Get all products with pagination and filtering
   async getProducts(params: GetProductsParams = {}): Promise<PaginatedProducts> {
+    if (isLocalDev) {
+      // Return mock data in local dev
+      const page = params.page || 1;
+      const limit = params.limit || 12;
+      const total = productsMock.length;
+      const totalPages = Math.ceil(total / limit);
+      return {
+        products: productsMock,
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1
+      };
+    }
     try {
       const response = await axios.get<PaginatedProducts>(PRODUCTS_ENDPOINT, { params });
       return response.data;

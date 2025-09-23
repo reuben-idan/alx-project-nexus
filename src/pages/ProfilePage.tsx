@@ -20,7 +20,7 @@ const ProfilePage = () => {
   const [editError, setEditError] = useState<string | null>(null);
   const [addresses, setAddresses] = useState<string[]>([]);
   const [newAddress, setNewAddress] = useState('');
-  const [notif, setNotif] = useState<string[]>(['Welcome to Everything Grocery!']);
+  const [notif] = useState<string[]>(['Welcome to Everything Grocery!']);
   const [securityOpen, setSecurityOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordChanged, setPasswordChanged] = useState(false);
