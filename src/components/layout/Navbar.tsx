@@ -83,8 +83,6 @@ const Navbar: React.FC = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => {
-              const isCategories = link.name === 'Categories';
-              const showDropdown = isCategories && (location.pathname === '/categories');
               return (
                 <div key={link.path} className="relative group">
                   <Link

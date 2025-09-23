@@ -11,6 +11,7 @@ import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import ProductGalleryDemo from './components/products/ProductGalleryDemo';
 import CategoriesPage from './pages/CategoriesPage';
+import CategoryDetailPage from './pages/CategoryDetailPage';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -67,6 +68,7 @@ const App: React.FC = () => {
               <Route path="products" element={<ProductsPage />} />
               <Route path="products/:id" element={<ProductDetailPage />} />
               <Route path="categories" element={<CategoriesPage />} />
+              <Route path="categories/:slug" element={<CategoryDetailPage />} />
               <Route path="auth" element={<PublicRoute><AuthPage /></PublicRoute>}>
                 <Route path="login" element={<AuthPage tab="login" />} />
                 <Route path="register" element={<AuthPage tab="register" />} />
