@@ -56,7 +56,8 @@ const App: React.FC = () => {
           <meta name="description" content="Shop fresh groceries online with fast delivery" />
           <meta name="theme-color" content="#ffffff" />
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="apple-touch-icon" href="/logo.png" />
+          <link rel="icon" href="/logo.png" />
         </Helmet>
         <Suspense fallback={
           <div className="flex items-center justify-center min-h-screen">

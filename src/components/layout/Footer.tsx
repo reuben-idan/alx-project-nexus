@@ -103,7 +103,8 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
+              <img src="/logo.png" alt="Everything Grocery logo" className="h-8 w-auto rounded-md" />
               <span className="text-2xl font-bold text-ios-blue">Everything Grocery</span>
             </div>
             <p className="mt-4 text-sm text-ios-label-secondary">

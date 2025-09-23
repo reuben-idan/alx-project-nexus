@@ -71,10 +71,8 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center group">
-              <div className="glass-card rounded-2xl p-2 mr-3 group-hover:scale-105 transition-transform duration-300">
-                <div className="w-8 h-8 bg-gradient-to-r from-water-400 to-water-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">EG</span>
-                </div>
+              <div className="glass-card rounded-2xl p-1 mr-3 group-hover:scale-105 transition-transform duration-300 flex items-center">
+                <img src="/logo.png" alt="Everything Grocery logo" className="h-8 w-auto rounded-lg object-contain" />
               </div>
               <span className="glass-title text-xl">Everything Grocery</span>
             </Link>
