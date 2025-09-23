@@ -80,7 +80,7 @@ const CheckoutPage = () => {
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h1>
             <p className="text-gray-600 mb-6">There are no items in your cart to checkout.</p>
             <Button asChild className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
-              <Link to="/products">Continue Shopping</Link>
+              <Link to="/products" className="flex w-full items-center justify-center">Continue Shopping</Link>
             </Button>
           </div>
         </div>
@@ -105,10 +105,10 @@ const CheckoutPage = () => {
             </p>
             <div className="mt-8">
               <Button asChild className="mr-4 bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
-                <Link to="/orders">View Order Status</Link>
+                <Link to="/orders" className="flex items-center justify-center">View Order Status</Link>
               </Button>
               <Button variant="outline" asChild>
-                <Link to="/products">Continue Shopping</Link>
+                <Link to="/products" className="flex items-center justify-center">Continue Shopping</Link>
               </Button>
             </div>
           </div>

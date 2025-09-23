@@ -111,8 +111,12 @@ const Navbar: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="button"
-              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
-              onClick={() => dispatch(toggleSearch())}
+              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300"
+              onClick={() => {
+                dispatch(toggleSearch());
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.location.href = '/products';
+              }}
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
@@ -122,8 +126,12 @@ const Navbar: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="button"
-              className="glass-card rounded-2xl p-3 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300 relative"
-              onClick={() => dispatch(toggleCart())}
+              className="glass-card rounded-2xl p-3 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300 relative"
+              onClick={() => {
+                dispatch(toggleCart());
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.location.href = '/cart';
+              }}
               aria-label="Shopping Cart"
             >
               <ShoppingCart className="h-5 w-5" />
@@ -142,7 +150,7 @@ const Navbar: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="button"
-              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
+              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300"
               onClick={() => {
                 const isDark = document.documentElement.classList.contains('dark');
                 dispatch(setTheme(isDark ? 'light' : 'dark'));

@@ -248,7 +248,7 @@ const OrdersPage = () => {
                 </p>
                 <div className="mt-6">
                   <Button asChild className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
-                    <Link to="/products">Continue Shopping</Link>
+                    <Link to="/products" className="flex items-center justify-center">Continue Shopping</Link>
                   </Button>
                 </div>
               </div>
@@ -374,7 +374,7 @@ const OrdersPage = () => {
               <p className="mt-1 text-sm text-gray-500">You haven't placed any orders yet. Start shopping to see your orders here.</p>
               <div className="mt-6">
                 <Button asChild className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
-                  <Link to="/products">Continue Shopping</Link>
+                  <Link to="/products" className="flex items-center justify-center">Continue Shopping</Link>
                 </Button>
               </div>
             </div>

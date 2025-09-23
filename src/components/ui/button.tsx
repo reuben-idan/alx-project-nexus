@@ -55,21 +55,34 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ...props
   }, ref) => {
     const Comp = asChild ? Slot : 'button'
-    
+    const classNames = cn(
+      buttonVariants({ variant, size }),
+      isLoading && 'opacity-70 cursor-not-allowed',
+      className
+    )
+
+    if (asChild) {
+      return (
+        <Slot
+          className={classNames}
+          ref={ref as any}
+          {...props}
+        >
+          {React.Children.only(children)}
+        </Slot>
+      )
+    }
+
     return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size }),
-          isLoading && 'opacity-70 cursor-not-allowed',
-          className
-        )}
+      <button
+        className={classNames}
         ref={ref}
         disabled={isLoading || disabled}
         {...props}
       >
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {children}
-      </Comp>
+      </button>
     )
   }
 )

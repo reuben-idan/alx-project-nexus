@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { X, Plus, Minus, ArrowLeft, ShoppingCart, Truck, Shield, RefreshCw } from 'lucide-react';
+import { X, Plus, Minus, ArrowLeft, ArrowRight, ShoppingCart, Truck, Shield, RefreshCw } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatCurrency } from '../utils/format';
 import { 
@@ -136,12 +136,9 @@ const CartPage = () => {
             <h2 className="mt-2 text-lg font-medium text-gray-900">Your cart is empty</h2>
             <p className="mt-1 text-gray-500">Start shopping to add items to your cart.</p>
             <div className="mt-6">
-              <Link
-                to="/products"
-                className="inline-flex items-center px-4 py-2 rounded-md shadow-lg text-sm font-medium text-white bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700"
-              >
-                Continue Shopping
-              </Link>
+              <Button asChild className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
+                <Link to="/products" className="flex items-center justify-center">Continue Shopping</Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -217,14 +214,14 @@ const CartPage = () => {
                 asChild
                 className="w-full bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-4 text-base font-medium shadow-lg"
               >
-                <Link to="/checkout">Checkout</Link>
+                <Link to="/checkout" className="flex w-full items-center justify-center">Checkout</Link>
               </Button>
             </div>
             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
               <p>
                 or{' '}
-                <Link to="/products" className="font-medium text-green-600 hover:text-green-500">
-                  Continue Shopping<span aria-hidden="true"> &rarr;</span>
+                <Link to="/products" className="font-medium text-green-600 hover:text-green-500 flex items-center gap-1">
+                  Continue Shopping<ArrowRight className="h-4 w-4" />
                 </Link>
               </p>
             </div>
