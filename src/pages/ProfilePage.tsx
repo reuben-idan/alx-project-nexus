@@ -1,6 +1,8 @@
 import { useState } from 'react';
 // import { useForm } from 'react-hook-form';
-import { Camera, User, MapPin, CreditCard, Bell, Shield, LogOut } from 'lucide-react';
+import { Camera, User, MapPin, CreditCard, Bell, Shield } from 'lucide-react';
+// import { useAuth } from '../features/auth/hooks/useAuth';
+import LogoutButton from '../features/auth/components/LogoutButton';
 // import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
@@ -75,10 +77,7 @@ const ProfilePage = () => {
                       <Shield className="mr-3 h-5 w-5" />
                       <span>Security</span>
                     </TabsTrigger>
-                    <button type="button" className="flex w-full items-center px-6 py-4 text-left text-red-600 hover:bg-red-50" onClick={() => console.log('Sign out')}>
-                      <LogOut className="mr-3 h-5 w-5" />
-                      <span>Sign Out</span>
-                    </button>
+                    <LogoutButton />
                   </TabsList>
                 </div>
                 <div className="mt-6 glass-card backdrop-blur-lg bg-gradient-to-r from-green-100/60 via-white/40 to-green-200/40 p-4 rounded-xl shadow">

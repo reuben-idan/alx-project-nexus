@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Search, User, Menu, X, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Search, User, Menu, X, ChevronDown, LogOut } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { toggleCart, toggleSearch, setTheme } from '../../store/slices/uiSlice';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 // Memoized selector to prevent unnecessary re-renders
 const selectCartItems = createSelector(
@@ -39,7 +40,9 @@ const Navbar: React.FC = () => {
     { id: '5', name: 'Beverages', slug: 'beverages' },
   ];
 
+
   const cartItems = useSelector(selectCartItems);
+  const { isAuthenticated, logout } = useAuth();
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -79,51 +82,29 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <div key={link.path} className="relative group">
-                <Link
-                  to={link.path}
-                  className={`glass-nav-item ${
-                    location.pathname === link.path ? 'glass-nav-item-active' : ''
-                  }`}
-                >
-                  <div className="flex items-center">
-                    {link.name}
-                    {link.children && (
-                      <ChevronDown className="ml-1 h-4 w-4 transition-transform group-hover:rotate-180" />
-                    )}
-                  </div>
-                </Link>
-
-                {/* Dropdown Menu */}
-                {link.children && link.children.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="absolute left-0 mt-2 w-56 glass-card rounded-3xl shadow-glass-lg p-4 z-50"
+            {navLinks.map((link) => {
+              const isCategories = link.name === 'Categories';
+              const showDropdown = isCategories && (location.pathname === '/categories');
+              return (
+                <div key={link.path} className="relative group">
+                  <Link
+                    to={link.path}
+                    className={`glass-nav-item ${
+                      location.pathname === link.path ? 'glass-nav-item-active' : ''
+                    }`}
                   >
-                    <div className="py-1">
-                      {link.children.map((category) => (
-                        <Link
-                          key={category.id}
-                          to={`/categories/${category.slug}`}
-                          className="block px-4 py-2 text-sm text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-200"
-                        >
-                          {category.name}
-                        </Link>
-                      ))}
-                      <div className="border-t border-glass-300/20 my-2"></div>
-                      <Link
-                        to="/categories"
-                        className="block px-4 py-2 text-sm font-semibold text-water-400 hover:text-water-300 transition-colors"
-                      >
-                        View all categories
-                      </Link>
+                    <div className="flex items-center">
+                      {link.name}
+                      {link.children && (
+                        <ChevronDown className="ml-1 h-4 w-4 transition-transform group-hover:rotate-180" />
+                      )}
                     </div>
-                  </motion.div>
-                )}
-              </div>
-            ))}
+                  </Link>
+
+                  {/* Dropdown Menu removed as requested */}
+                </div>
+              );
+            })}
           </nav>
 
           {/* Right side icons */}
@@ -175,13 +156,33 @@ const Navbar: React.FC = () => {
               </div>
             </motion.button>
 
-            <Link
-              to="/account"
-              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
-              aria-label="Account"
-            >
-              <User className="h-5 w-5" />
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/profile"
+                  className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
+                  aria-label="Account"
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+                <button
+                  className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300 ml-2"
+                  aria-label="Sign Out"
+                  onClick={logout}
+                >
+                  <LogOut className="h-5 w-5" />
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/auth"
+                className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
+                aria-label="Login/Register"
+              >
+                <User className="h-5 w-5" />
+              </Link>
+            )}
 
             {/* Mobile menu button */}
             <div className="md:hidden ml-2">
@@ -249,13 +250,33 @@ const Navbar: React.FC = () => {
               ))}
 
               <div className="pt-4 border-t border-glass-300/20 mt-4">
-                <Link
-                  to="/account"
-                  className="flex items-center px-4 py-3 text-base font-medium text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"
-                >
-                  <User className="mr-3 h-6 w-6" />
-                  My Account
-                </Link>
+
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/profile"
+                      className="flex items-center px-4 py-3 text-base font-medium text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"
+                    >
+                      <User className="mr-3 h-6 w-6" />
+                      My Account
+                    </Link>
+                    <button
+                      className="flex items-center px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-300 mt-2"
+                      onClick={logout}
+                    >
+                      <LogOut className="mr-3 h-6 w-6" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    to="/auth"
+                    className="flex items-center px-4 py-3 text-base font-medium text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"
+                  >
+                    <User className="mr-3 h-6 w-6" />
+                    Login / Register
+                  </Link>
+                )}
                 <Link
                   to="/cart"
                   className="flex items-center px-4 py-3 text-base font-medium text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"

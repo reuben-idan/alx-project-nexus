@@ -10,6 +10,7 @@ import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import ProductGalleryDemo from './components/products/ProductGalleryDemo';
+import CategoriesPage from './pages/CategoriesPage';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -54,56 +55,28 @@ const App: React.FC = () => {
           <meta name="theme-color" content="#ffffff" />
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-          <link rel="manifest" href="/site.webmanifest" />
         </Helmet>
-        
         <Suspense fallback={
           <div className="flex items-center justify-center min-h-screen">
             <LoadingSpinner size="lg" />
           </div>
         }>
           <Routes>
-            {/* Public Routes */}
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="products/:id" element={<ProductDetailPage />} />
-              
-              {/* Auth Routes */}
-              <Route path="auth" element={
-                <PublicRoute>
-                  <AuthPage />
-                </PublicRoute>
-              } />
-              
-              {/* Protected Routes */}
-              <Route path="cart" element={
-                <ProtectedRoute>
-                  <CartPage />
-                </ProtectedRoute>
-              } />
-              
-              <Route path="checkout" element={
-                <ProtectedRoute>
-                  <CheckoutPage />
-                </ProtectedRoute>
-              } />
-              
-              <Route path="profile" element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              } />
-              
-              <Route path="orders" element={
-                <ProtectedRoute>
-                  <OrdersPage />
-                </ProtectedRoute>
-              } />
-              
+              <Route path="categories" element={<CategoriesPage />} />
+              <Route path="auth" element={<PublicRoute><AuthPage /></PublicRoute>}>
+                <Route path="login" element={<AuthPage tab="login" />} />
+                <Route path="register" element={<AuthPage tab="register" />} />
+              </Route>
+              <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+              <Route path="cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+              <Route path="checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+              <Route path="orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
+              <Route path="demo/gallery" element={<ProductGalleryDemo />} />
               <Route path="*" element={<NotFoundPage />} />
-              {/* Demo route for testing ProductGallery */}
-              <Route path="/demo/gallery" element={<ProductGalleryDemo />} />
             </Route>
           </Routes>
         </Suspense>
