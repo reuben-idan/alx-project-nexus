@@ -27,7 +27,6 @@ const sortOptions: { value: ProductSortOption; label: string }[] = [
 
 const ProductSort = ({ sortBy, onSortChange }: ProductSortProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  
   const currentSortLabel = sortOptions.find(option => option.value === sortBy)?.label || 'Sort By';
 
   return (
@@ -36,24 +35,22 @@ const ProductSort = ({ sortBy, onSortChange }: ProductSortProps) => {
         <Button 
           variant="outline" 
           size="sm" 
-          className="flex items-center gap-2 border-gray-300 hover:bg-gray-50"
+          className="glass-card backdrop-blur-xl shadow-glass border-glass-300/20 text-glass-600 flex items-center gap-2 rounded-2xl px-4 py-2 font-medium"
         >
-          <span className="text-sm font-medium text-gray-700">{currentSortLabel}</span>
+          <span className="text-sm font-medium text-glass-600">{currentSortLabel}</span>
           <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent className="w-56 glass-card backdrop-blur-xl shadow-glass border-glass-300/20 rounded-2xl" align="end">
         {sortOptions.map((option) => (
           <DropdownMenuItem 
             key={option.value} 
-            className="flex items-center justify-between px-4 py-2 text-sm cursor-pointer hover:bg-gray-50"
+            className={`flex items-center justify-between px-4 py-2 text-sm cursor-pointer rounded-xl transition-all ${sortBy === option.value ? 'bg-water-400/20 text-glass-600 font-semibold' : 'hover:bg-glass-300/20 text-glass-600'}`}
             onClick={() => onSortChange(option.value)}
           >
-            <span className={sortBy === option.value ? 'font-medium text-gray-900' : 'text-gray-600'}>
-              {option.label}
-            </span>
+            <span>{option.label}</span>
             {sortBy === option.value && (
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-water-400" />
             )}
           </DropdownMenuItem>
         ))}

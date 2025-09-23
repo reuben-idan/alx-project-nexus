@@ -1,5 +1,5 @@
 import { Product } from '../../types/product';
-import Carousel from '../ui/Carousel';
+import Carousel from '../../components/ui/Carousel';
 import ProductCard from './ProductCard';
 
 export interface FeaturedProductsProps {
@@ -59,7 +59,7 @@ const FeaturedProducts = ({
         
         <Carousel 
           items={products} 
-          renderItem={(product) => (
+          renderItem={(product: Product) => (
             <div key={product.id} className="px-2">
               <ProductCard 
                 product={product} 

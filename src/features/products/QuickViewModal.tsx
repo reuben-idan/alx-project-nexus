@@ -1,5 +1,5 @@
 import { X, ShoppingCart, Heart, Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../../components/ui/button';
 import { useState } from 'react';
 import { Product } from '../../types/product';
 import { formatCurrency } from '../../utils/format';

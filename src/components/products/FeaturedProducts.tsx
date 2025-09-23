@@ -23,11 +23,11 @@ const FeaturedProducts = ({
     return (
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-2">{title}</h2>
-          {subtitle && <p className="text-gray-600 mb-6">{subtitle}</p>}
+          <h2 className="glass-title text-2xl font-bold mb-2">{title}</h2>
+          {subtitle && <p className="glass-subtitle text-glass-600 mb-6">{subtitle}</p>}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {[...Array(4)].map((_, index) => (
-              <div key={index} className="animate-pulse bg-gray-100 rounded-xl h-96" />
+              <div key={index} className="animate-pulse glass-card glass-card-hover backdrop-blur-xl shadow-glass rounded-2xl h-96" />
             ))}
           </div>
         </div>
@@ -50,13 +50,12 @@ const FeaturedProducts = ({
   }
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-glass-200/20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">{title}</h2>
-          {subtitle && <p className="text-gray-600 max-w-2xl mx-auto">{subtitle}</p>}
+          <h2 className="glass-title text-3xl font-bold mb-2">{title}</h2>
+          {subtitle && <p className="glass-subtitle text-glass-600 max-w-2xl mx-auto">{subtitle}</p>}
         </div>
-        
         <Carousel 
           items={products} 
           renderItem={(product) => (
@@ -64,6 +63,7 @@ const FeaturedProducts = ({
               <ProductCard 
                 product={product} 
                 onAddToCart={onAddToCart} 
+                glassmorphic
               />
             </div>
           )}

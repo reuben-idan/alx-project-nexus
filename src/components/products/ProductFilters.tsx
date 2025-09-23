@@ -100,13 +100,13 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
     filters.onSale !== undefined;
 
   return (
-    <div className="space-y-6">
+    <div className="glass-card backdrop-blur-xl shadow-glass p-6 rounded-2xl space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Filters</h3>
+        <h3 className="glass-title text-lg font-semibold">Filters</h3>
         {hasActiveFilters && (
           <button 
             onClick={clearAllFilters}
-            className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+            className="text-sm text-water-400 hover:text-water-600 flex items-center"
           >
             <X size={14} className="mr-1" />
             Clear all
@@ -115,7 +115,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Categories */}
-      <div className="border-b pb-4">
+      <div className="border-b border-glass-300/20 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('category')}
@@ -146,7 +146,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Price Range */}
-      <div className="border-b pb-4">
+      <div className="border-b border-glass-300/20 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('price')}
@@ -165,7 +165,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
               onValueChange={handlePriceChange}
               className="mb-6"
             />
-            <div className="flex justify-between text-sm text-gray-600">
+            <div className="flex justify-between text-sm text-glass-600">
               <span>${priceRange[0]}</span>
               <span>${priceRange[1]}</span>
             </div>
@@ -174,7 +174,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Rating */}
-      <div className="border-b pb-4">
+      <div className="border-b border-glass-300/20 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('rating')}
@@ -196,7 +196,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
-                      className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                      className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-glass-600'}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +204,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
-                  <span className="ml-1 text-xs text-gray-500">& Up</span>
+                  <span className="ml-1 text-xs text-glass-600">& Up</span>
                 </div>
               </div>
             ))}
@@ -213,7 +213,7 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
       </div>
 
       {/* Availability */}
-      <div className="border-b pb-4">
+      <div className="border-b border-glass-300/20 pb-4">
         <button 
           className="w-full flex justify-between items-center py-2 font-medium"
           onClick={() => toggleSection('availability')}
@@ -262,62 +262,62 @@ const ProductFilters = ({ filters, onFilterChange }: ProductFiltersProps) => {
             {filters.categories?.map((category) => (
               <span 
                 key={category}
-                className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-water-400 via-water-500 to-water-600 text-white shadow-glass"
               >
                 {category}
                 <button 
                   onClick={() => handleCategoryChange(category)}
-                  className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-200 text-blue-800 hover:bg-blue-300"
+                  className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-water-200 text-water-800 hover:bg-water-300"
                 >
-                  ×
+                  
                 </button>
               </span>
             ))}
             
             {(filters.minPrice !== undefined || filters.maxPrice !== undefined) && (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                ${filters.minPrice || 0} - ${filters.maxPrice || '∞'}
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white shadow-glass">
+                ${filters.minPrice || 0} - ${filters.maxPrice || ''}
                 <button 
                   onClick={() => onFilterChange({ minPrice: undefined, maxPrice: undefined })}
                   className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-green-200 text-green-800 hover:bg-green-300"
                 >
-                  ×
+                  
                 </button>
               </span>
             )}
             
             {filters.minRating !== undefined && (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white shadow-glass">
                 {filters.minRating}+ Stars
                 <button 
                   onClick={() => onFilterChange({ minRating: undefined })}
                   className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-yellow-200 text-yellow-800 hover:bg-yellow-300"
                 >
-                  ×
+                  
                 </button>
               </span>
             )}
             
             {filters.inStock && (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 text-white shadow-glass">
                 In Stock
                 <button 
                   onClick={() => onFilterChange({ inStock: undefined })}
                   className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-purple-200 text-purple-800 hover:bg-purple-300"
                 >
-                  ×
+                  
                 </button>
               </span>
             )}
             
             {filters.onSale && (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white shadow-glass">
                 On Sale
                 <button 
                   onClick={() => onFilterChange({ onSale: undefined })}
                   className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-200 text-red-800 hover:bg-red-300"
                 >
-                  ×
+                  
                 </button>
               </span>
             )}

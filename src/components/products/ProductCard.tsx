@@ -9,16 +9,13 @@ import QuickViewModal from './QuickViewModal';
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product, variantId?: string) => void;
+  glassmorphic?: boolean;
 }
 
-const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
-  // Use the first variant if available, otherwise use the product itself
+const ProductCard = ({ product, onAddToCart, glassmorphic }: ProductCardProps) => {
   const selectedVariant = product.variants?.[0] || null;
-  
-  // State management
   const [isWishlist, setIsWishlist] = useState(false);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-
   const price = selectedVariant?.price ?? product.price;
   const originalPrice = selectedVariant?.originalPrice ?? product.originalPrice;
   const discount = originalPrice && price < originalPrice 
@@ -27,62 +24,32 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const isInStock = selectedVariant 
     ? (selectedVariant.stock ?? 0) > 0 
     : product.isInStock;
-
-  // Product rating
   const averageRating = product.rating || 0;
+  const hasTags = product.tags && product.tags.length > 0;
+  const isNew = product.createdAt && 
+    (new Date().getTime() - new Date(product.createdAt).getTime()) < (30 * 24 * 60 * 60 * 1000);
 
-  // Handle add to cart
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onAddToCart(product, selectedVariant?.id);
   };
-
-  // Handle quantity changes (commented out as it's not currently used)
-  // const handleQuantityChange = (newQuantity: number) => {
-  //   if (newQuantity < 1) return;
-  //   const maxQuantity = selectedVariant?.stock ?? product.stock ?? 0;
-  //   setQuantity(Math.min(newQuantity, maxQuantity));
-  // };
-
-  // Toggle wishlist
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsWishlist(!isWishlist);
   };
-
-  // Get product image
   const getProductImage = () => {
     if (product.images?.length > 0) {
       return product.images[0].url;
     }
     return '/placeholder-product.jpg';
   };
-
-  // Handle quick view
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsQuickViewOpen(true);
   };
-
-  // Handle variant selection (commented out as it's not currently used)
-  // const handleVariantSelect = (variant: ProductVariant) => {
-  //   setSelectedVariant(variant);
-  //   setQuantity(1);
-  // };
-
-  // Handle add to cart from quick view
-  const handleAddToCartFromQuickView = (product: Product) => {
-    onAddToCart(product, selectedVariant?.id);
-    // You could add a toast notification here
-  };
-
-  // Check if product has any special tags
-  const hasTags = product.tags && product.tags.length > 0;
-  const isNew = product.createdAt && 
-    (new Date().getTime() - new Date(product.createdAt).getTime()) < (30 * 24 * 60 * 60 * 1000);
 
   return (
     <div className="h-full flex flex-col">
@@ -90,28 +57,27 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group h-full flex flex-col"
+        className={`group h-full flex flex-col overflow-hidden ${glassmorphic ? 'glass-card glass-card-hover backdrop-blur-xl shadow-glass rounded-2xl transition-shadow duration-300' : 'bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300'}`}
       >
         <div className="relative group flex-1 flex flex-col">
           {/* Product Badges */}
           <div className="absolute top-2 left-2 z-10 flex flex-col space-y-1">
             {discount > 0 && (
-              <span className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
+              <span className={`text-xs font-semibold px-2 py-1 rounded ${glassmorphic ? 'bg-glass-blue/60 text-white shadow-glass' : 'bg-red-500 text-white'}`}>
                 -{discount}% OFF
               </span>
             )}
             {isNew && (
-              <span className="bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">
+              <span className={`text-xs font-semibold px-2 py-1 rounded ${glassmorphic ? 'bg-water-400/60 text-white shadow-glass' : 'bg-blue-500 text-white'}`}>
                 New
               </span>
             )}
             {hasTags && product.tags.some(tag => tag.toLowerCase() === 'bestseller') && (
-              <span className="bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded">
+              <span className={`text-xs font-semibold px-2 py-1 rounded ${glassmorphic ? 'bg-glass-pink/60 text-white shadow-glass' : 'bg-yellow-500 text-white'}`}>
                 Bestseller
               </span>
             )}
           </div>
-
           {/* Product Image */}
           <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100 relative">
             <img
@@ -120,7 +86,6 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
               className="h-full w-full object-cover object-center group-hover:opacity-90 transition-opacity duration-300"
               loading="lazy"
             />
-            
             {/* Quick actions */}
             <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/5">
               <button
@@ -190,7 +155,6 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                   )}
                 </div>
               </div>
-
               {/* Rating and Review Count */}
               <div className="mt-2 flex items-center">
                 <div className="flex items-center">
@@ -211,7 +175,6 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                   </a>
                 )}
               </div>
-
               {/* Product Tags */}
               {hasTags && (
                 <div className="mt-2 flex flex-wrap gap-1">
@@ -229,7 +192,6 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                   )}
                 </div>
               )}
-
               {/* Shipping Info */}
               <div className="mt-2 pt-2 border-t border-gray-100">
                 <div className="flex items-center text-xs text-gray-500">
@@ -244,7 +206,6 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                 )}
               </div>
             </div>
-
             {/* Add to cart button */}
             <div className="mt-4 pt-3 border-t border-gray-100">
               <button
@@ -261,13 +222,12 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
               </button>
             </div>
           </div>
-          
           {/* Quick View Modal */}
           <QuickViewModal
             product={product}
             isOpen={isQuickViewOpen}
             onClose={() => setIsQuickViewOpen(false)}
-            onAddToCart={handleAddToCartFromQuickView}
+            onAddToCart={product => onAddToCart(product, selectedVariant?.id ?? undefined)}
           />
         </div>
       </motion.div>

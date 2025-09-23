@@ -48,7 +48,7 @@ const CartItem = ({
   };
 
   return (
-    <div className="flex items-center py-4 border-b border-gray-200">
+  <div className="flex items-center py-4 border-b border-gray-200 glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl">
       <div className="flex-shrink-0 h-24 w-24 overflow-hidden rounded-md border border-gray-200">
         <img
           src={image || '/placeholder-product.jpg'}
@@ -129,16 +129,16 @@ const CartPage = () => {
 
   if (items.length === 0) {
     return (
-      <div className="bg-white">
+      <div className="bg-gradient-to-br from-white/70 via-green-50/60 to-green-100/40 min-h-[60vh] flex items-center justify-center">
         <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <ShoppingCart className="mx-auto h-12 w-12 text-gray-400" />
+          <div className="glass-card backdrop-blur-lg shadow-2xl p-8 rounded-xl text-center">
+            <ShoppingCart className="mx-auto h-12 w-12 text-green-400" />
             <h2 className="mt-2 text-lg font-medium text-gray-900">Your cart is empty</h2>
             <p className="mt-1 text-gray-500">Start shopping to add items to your cart.</p>
             <div className="mt-6">
               <Link
                 to="/products"
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                className="inline-flex items-center px-4 py-2 rounded-md shadow-lg text-sm font-medium text-white bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700"
               >
                 Continue Shopping
               </Link>
@@ -150,16 +150,12 @@ const CartPage = () => {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-gradient-to-br from-white/70 via-green-50/60 to-green-100/40 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold tracking-tight text-gray-900">Shopping Cart</h1>
-        
         <div className="mt-8 lg:grid lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
-            <h2 id="cart-heading" className="sr-only">
-              Items in your shopping cart
-            </h2>
-
+            <h2 id="cart-heading" className="sr-only">Items in your shopping cart</h2>
             <div className="border-t border-b border-gray-200 divide-y divide-gray-200">
               {items.map((item) => (
                 <CartItem
@@ -170,7 +166,6 @@ const CartPage = () => {
                 />
               ))}
             </div>
-            
             <div className="mt-4 flex justify-end">
               <button
                 type="button"
@@ -180,7 +175,6 @@ const CartPage = () => {
                 Clear cart
               </button>
             </div>
-            
             <div className="mt-8">
               <Link to="/products" className="flex items-center text-sm font-medium text-green-600 hover:text-green-500">
                 <ArrowLeft className="mr-1 h-4 w-4" />
@@ -188,16 +182,12 @@ const CartPage = () => {
               </Link>
             </div>
           </section>
-
           {/* Order summary */}
           <section
             aria-labelledby="summary-heading"
-            className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
+            className="mt-16 rounded-xl glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-2xl px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 border border-white/30"
           >
-            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
-              Order Summary
-            </h2>
-
+            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">Order Summary</h2>
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Subtotal</dt>
@@ -222,16 +212,14 @@ const CartPage = () => {
                 <dd className="text-base font-medium text-gray-900">{formatCurrency(orderTotal)}</dd>
               </div>
             </dl>
-
             <div className="mt-6">
               <Button
                 asChild
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 text-base font-medium"
+                className="w-full bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-4 text-base font-medium shadow-lg"
               >
                 <Link to="/checkout">Checkout</Link>
               </Button>
             </div>
-            
             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
               <p>
                 or{' '}
@@ -242,7 +230,6 @@ const CartPage = () => {
             </div>
           </section>
         </div>
-        
         {/* Features */}
         <div className="mt-16 border-t border-gray-200 py-8">
           <h2 className="sr-only">Why shop with us</h2>
@@ -265,7 +252,7 @@ const CartPage = () => {
               },
             ].map((feature) => (
               <div key={feature.name} className="text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full glass-card backdrop-blur-lg bg-gradient-to-br from-green-100/60 via-white/40 to-green-200/40 text-green-600 shadow-lg">
                   <feature.icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <h3 className="mt-4 text-sm font-medium text-gray-900">

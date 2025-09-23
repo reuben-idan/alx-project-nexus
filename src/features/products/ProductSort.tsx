@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { ProductSortOption } from '../../types/product';
-import { Button } from '../ui/button';
-import {
+import { Button } from '../../components/ui/button';
+import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+} from '../../components/ui/dropdown-menu';
 import { ChevronDown, Check } from 'lucide-react';
 
 interface ProductSortProps {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Star, Heart, Share2, Truck, Shield, Package, Check, Minus, Plus } from 'lucide-react';
 import { Product } from '../../types/product';
-import { Button } from '../ui/button';
+import { Button } from '../../components/ui/button';
 import ProductGallery from './ProductGallery';
 
 interface ProductDetailProps {

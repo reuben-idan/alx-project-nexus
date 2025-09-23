@@ -207,22 +207,16 @@ const OrdersPage = () => {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-gradient-to-br from-white/70 via-green-50/60 to-green-100/40 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto lg:max-w-none">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-            Order History
-          </h1>
-          
-          <p className="mt-2 text-sm text-gray-500">
-            Check the status of recent orders, manage returns, and download invoices.
-          </p>
-          
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Order History</h1>
+          <p className="mt-2 text-sm text-gray-500">Check the status of recent orders, manage returns, and download invoices.</p>
           {/* Status Filter */}
           <div className="mt-8 flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedStatus('all')}
-              className={`px-4 py-2 text-sm font-medium rounded-full ${selectedStatus === 'all' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
+              className={`px-4 py-2 text-sm font-medium rounded-full glass-card backdrop-blur-lg shadow-lg ${selectedStatus === 'all' ? 'bg-green-100 text-green-800' : 'bg-white/60 text-gray-800 hover:bg-gray-200'}`}
             >
               All Orders
             </button>
@@ -230,7 +224,7 @@ const OrdersPage = () => {
               <button
                 key={status}
                 onClick={() => setSelectedStatus(status as OrderStatus)}
-                className={`px-4 py-2 text-sm font-medium rounded-full flex items-center gap-2 ${selectedStatus === status ? statusColors[status as keyof typeof statusColors] : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
+                className={`px-4 py-2 text-sm font-medium rounded-full flex items-center gap-2 glass-card backdrop-blur-lg shadow-lg ${selectedStatus === status ? statusColors[status as keyof typeof statusColors] : 'bg-white/60 text-gray-800 hover:bg-gray-200'}`}
               >
                 {icon}
                 {getStatusText(status as OrderStatus)}
@@ -241,48 +235,39 @@ const OrdersPage = () => {
               </button>
             ))}
           </div>
-          
           {/* Orders List */}
           <div className="mt-8 space-y-8">
             {filteredOrders.length === 0 ? (
               <div className="text-center py-12">
-                <Package className="mx-auto h-12 w-12 text-gray-400" />
+                <Package className="mx-auto h-12 w-12 text-green-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
                 <p className="mt-1 text-sm text-gray-500">
                   {selectedStatus === 'all' 
-                    ? 'You haven\'t placed any orders yet.' 
+                    ? "You haven't placed any orders yet." 
                     : `You don't have any ${selectedStatus} orders.`}
                 </p>
                 <div className="mt-6">
-                  <Button asChild>
+                  <Button asChild className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
                     <Link to="/products">Continue Shopping</Link>
                   </Button>
                 </div>
               </div>
             ) : (
               filteredOrders.map((order) => (
-                <div key={order.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div key={order.id} className="border border-white/30 rounded-xl overflow-hidden glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl">
                   {/* Order Header */}
-                  <div className="bg-gray-50 px-4 py-4 sm:px-6">
+                  <div className="bg-gradient-to-r from-white/60 via-green-50/40 to-green-100/40 px-4 py-4 sm:px-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center">
-                        <h3 className="text-lg font-medium text-gray-900">
-                          Order #{order.id}
-                        </h3>
-                        <span className={`ml-3 px-2.5 py-0.5 text-xs font-medium rounded-full ${statusColors[order.status]}`}>
-                          {getStatusText(order.status)}
-                        </span>
+                        <h3 className="text-lg font-medium text-gray-900">Order #{order.id}</h3>
+                        <span className={`ml-3 px-2.5 py-0.5 text-xs font-medium rounded-full glass-card backdrop-blur-lg shadow ${statusColors[order.status]}`}>{getStatusText(order.status)}</span>
                       </div>
                       <div className="mt-2 sm:mt-0 text-sm text-gray-500">
-                        <time dateTime={order.date.toISOString()}>
-                          {format(order.date, 'MMMM d, yyyy')}
-                        </time>
+                        <time dateTime={order.date.toISOString()}>{format(order.date, 'MMMM d, yyyy')}</time>
                       </div>
                     </div>
                     <div className="mt-2 sm:mt-4 flex justify-between items-center">
-                      <p className="text-sm text-gray-500">
-                        {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
-                      </p>
+                      <p className="text-sm text-gray-500">{order.items.length} {order.items.length === 1 ? 'item' : 'items'}</p>
                       <button
                         onClick={() => toggleOrder(order.id)}
                         className="text-sm font-medium text-green-600 hover:text-green-500"
@@ -291,16 +276,15 @@ const OrdersPage = () => {
                       </button>
                     </div>
                   </div>
-                  
                   {/* Order Items */}
                   {expandedOrder === order.id && (
-                    <div className="px-4 py-6 sm:px-6 border-t border-gray-200">
+                    <div className="px-4 py-6 sm:px-6 border-t border-white/30">
                       <h4 className="sr-only">Items</h4>
                       <ul role="list" className="divide-y divide-gray-200">
                         {order.items.map((item) => (
                           <li key={item.id} className="py-4">
                             <div className="flex items-center">
-                              <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                              <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-white/30 glass-card backdrop-blur-lg">
                                 <img
                                   src={item.image}
                                   alt={item.name}
@@ -313,101 +297,68 @@ const OrdersPage = () => {
                               </div>
                               <div className="ml-4 flex-1">
                                 <div>
-                                  <h4 className="text-sm font-medium text-gray-900">
-                                    {item.name}
-                                  </h4>
-                                  <p className="mt-1 text-sm text-gray-500">
-                                    Qty: {item.quantity}
-                                  </p>
+                                  <h4 className="text-sm font-medium text-gray-900">{item.name}</h4>
+                                  <p className="mt-1 text-sm text-gray-500">Qty: {item.quantity}</p>
                                 </div>
-                                <p className="mt-1 text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.price * item.quantity)}
-                                </p>
+                                <p className="mt-1 text-sm font-medium text-gray-900">{formatCurrency(item.price * item.quantity)}</p>
                               </div>
                             </div>
                           </li>
                         ))}
                       </ul>
-                      
                       {/* Order Summary */}
-                      <div className="mt-6 border-t border-gray-200 pt-6">
+                      <div className="mt-6 border-t border-white/30 pt-6">
                         <h4 className="text-sm font-medium text-gray-900">Order Summary</h4>
                         <dl className="mt-2 space-y-2">
                           <div className="flex items-center justify-between">
                             <dt className="text-sm text-gray-600">Subtotal</dt>
-                            <dd className="text-sm font-medium text-gray-900">
-                              {formatCurrency(order.total)}
-                            </dd>
+                            <dd className="text-sm font-medium text-gray-900">{formatCurrency(order.total)}</dd>
                           </div>
                           <div className="flex items-center justify-between">
                             <dt className="text-sm text-gray-600">Shipping</dt>
-                            <dd className="text-sm font-medium text-gray-900">
-                              {order.total > 50 ? 'Free' : '$5.99'}
-                            </dd>
+                            <dd className="text-sm font-medium text-gray-900">{order.total > 50 ? 'Free' : '$5.99'}</dd>
                           </div>
                           <div className="flex items-center justify-between">
                             <dt className="text-sm text-gray-600">Tax</dt>
-                            <dd className="text-sm font-medium text-gray-900">
-                              {formatCurrency(order.total * 0.1)}
-                            </dd>
+                            <dd className="text-sm font-medium text-gray-900">{formatCurrency(order.total * 0.1)}</dd>
                           </div>
-                          <div className="flex items-center justify-between border-t border-gray-200 pt-2">
+                          <div className="flex items-center justify-between border-t border-white/30 pt-2">
                             <dt className="text-base font-medium text-gray-900">Total</dt>
-                            <dd className="text-base font-medium text-gray-900">
-                              {formatCurrency(order.total + (order.total > 50 ? 0 : 5.99) + (order.total * 0.1))}
-                            </dd>
+                            <dd className="text-base font-medium text-gray-900">{formatCurrency(order.total + (order.total > 50 ? 0 : 5.99) + (order.total * 0.1))}</dd>
                           </div>
                         </dl>
                       </div>
-                      
                       {/* Shipping and Payment Info */}
                       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <div>
                           <h4 className="text-sm font-medium text-gray-900">Shipping Address</h4>
-                          <address className="mt-2 not-italic text-sm text-gray-500">
-                            {order.shippingAddress.name}<br />
-                            {order.shippingAddress.street}<br />
-                            {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}
-                          </address>
+                          <address className="mt-2 not-italic text-sm text-gray-500">{order.shippingAddress.name}<br />{order.shippingAddress.street}<br />{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}</address>
                         </div>
                         <div>
                           <h4 className="text-sm font-medium text-gray-900">Payment Information</h4>
                           <div className="mt-2 text-sm text-gray-500">
                             <p>{order.paymentMethod}</p>
                             {order.status !== 'cancelled' && order.trackingNumber && (
-                              <p className="mt-2">
-                                Tracking: {order.trackingNumber}
-                              </p>
+                              <p className="mt-2">Tracking: {order.trackingNumber}</p>
                             )}
                           </div>
                         </div>
                       </div>
-                      
                       {/* Order Actions */}
                       <div className="mt-6 flex flex-col sm:flex-row gap-3">
                         {order.status === 'delivered' && (
-                          <Button variant="outline" className="w-full sm:w-auto">
-                            Leave a Review
-                          </Button>
+                          <Button variant="outline" className="w-full sm:w-auto">Leave a Review</Button>
                         )}
                         {order.status === 'shipped' && (
-                          <Button variant="outline" className="w-full sm:w-auto">
-                            Track Package
-                          </Button>
+                          <Button variant="outline" className="w-full sm:w-auto">Track Package</Button>
                         )}
                         {order.status === 'delivered' && (
-                          <Button variant="outline" className="w-full sm:w-auto">
-                            Buy it again
-                          </Button>
+                          <Button variant="outline" className="w-full sm:w-auto">Buy it again</Button>
                         )}
                         {order.status === 'cancelled' && (
-                          <Button variant="outline" className="w-full sm:w-auto">
-                            Buy it again
-                          </Button>
+                          <Button variant="outline" className="w-full sm:w-auto">Buy it again</Button>
                         )}
-                        <Button className="w-full sm:w-auto ml-auto">
-                          View Invoice
-                        </Button>
+                        <Button className="w-full sm:w-auto ml-auto bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">View Invoice</Button>
                       </div>
                     </div>
                   )}
@@ -415,33 +366,25 @@ const OrdersPage = () => {
               ))
             )}
           </div>
-          
           {/* Empty State for No Orders */}
           {filteredOrders.length === 0 && selectedStatus === 'all' && (
             <div className="text-center py-12">
-              <Package className="mx-auto h-12 w-12 text-gray-400" />
+              <Package className="mx-auto h-12 w-12 text-green-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">No orders yet</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                You haven't placed any orders yet. Start shopping to see your orders here.
-              </p>
+              <p className="mt-1 text-sm text-gray-500">You haven't placed any orders yet. Start shopping to see your orders here.</p>
               <div className="mt-6">
-                <Button asChild>
+                <Button asChild className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
                   <Link to="/products">Continue Shopping</Link>
                 </Button>
               </div>
             </div>
           )}
-          
           {/* Help Section */}
-          <div className="mt-12 border-t border-gray-200 pt-8">
+          <div className="mt-12 border-t border-white/30 pt-8">
             <h2 className="text-lg font-medium text-gray-900">Need help with your order?</h2>
-            <p className="mt-2 text-sm text-gray-500">
-              Contact our customer service team for assistance with your order.
-            </p>
+            <p className="mt-2 text-sm text-gray-500">Contact our customer service team for assistance with your order.</p>
             <div className="mt-4">
-              <Button variant="outline">
-                Contact Support
-              </Button>
+              <Button variant="outline" className="glass-card backdrop-blur-lg shadow">Contact Support</Button>
             </div>
           </div>
         </div>

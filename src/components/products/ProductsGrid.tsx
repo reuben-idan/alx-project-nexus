@@ -32,7 +32,7 @@ const ProductsGrid = ({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {[...Array(8)].map((_, index) => (
-          <div key={index} className="animate-pulse bg-gray-100 rounded-xl h-96" />
+          <div key={index} className="animate-pulse glass-card glass-card-hover backdrop-blur-xl shadow-glass rounded-2xl h-96" />
         ))}
       </div>
     );
@@ -61,6 +61,7 @@ const ProductsGrid = ({
           key={product.id} 
           product={product} 
           onAddToCart={handleAddToCart} 
+          glassmorphic
         />
       ))}
     </div>
