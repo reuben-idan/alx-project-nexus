@@ -11,6 +11,7 @@ import {
 } from '../store/slices/cartSlice';
 import { AppDispatch } from '../store';
 import { Button } from '../components/ui/button';
+import productsMock from '../mocks/products.mock.json';
 
 type CartItemProps = {
   id: string;
@@ -47,12 +48,24 @@ const CartItem = ({
     }
   };
 
+  // determine a product-specific image fallback (prefer real product images in /public/images)
+  const product = productsMock.find((p: any) => p.id === productId || p.id === String(productId) || p.slug === productId);
+  let productImage = image || product?.images?.[0]?.url || '/images/logo.png';
+  // Correct known mismatches in the mock data: use the Sourdough and Premium Apple files from public/images
+  if (product?.slug === 'sourdough-bread' || (product?.name && product.name.toLowerCase().includes('sourdough'))) {
+    productImage = '/images/Sourdough Bread.png';
+  }
+  if (product?.slug === 'premium-apple' || (product?.name && product.name.toLowerCase().includes('premium apple'))) {
+    productImage = '/images/Premium Apple.png';
+  }
+
   return (
-  <div className="flex items-center py-4 border-b border-gray-200 glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl">
+    <div className="flex items-center py-4 glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl">
       <div className="flex-shrink-0 h-24 w-24 overflow-hidden rounded-md border border-gray-200">
         <img
-          src={image || '/placeholder-product.png'}
+          src={productImage}
           alt={name}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/logo.png'; }}
           className="h-full w-full object-cover object-center"
         />
       </div>
@@ -153,16 +166,26 @@ const CartPage = () => {
         <div className="mt-8 lg:grid lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             <h2 id="cart-heading" className="sr-only">Items in your shopping cart</h2>
-            <div className="border-t border-b border-gray-200 divide-y divide-gray-200">
-              {items.map((item) => (
-                <CartItem
-                  key={item.id}
-                  {...item}
-                  onRemove={handleRemoveItem}
-                  onUpdateQuantity={handleUpdateQuantity}
-                />
-              ))}
-            </div>
+                {items.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    {...item}
+                    onRemove={handleRemoveItem}
+                    onUpdateQuantity={handleUpdateQuantity}
+                  />
+                ))}
+                   <div className="border-t border-b border-gray-200">
+                     <div className="flex flex-col gap-4 py-4">
+                       {items.map((item) => (
+                         <CartItem
+                           key={item.id}
+                           {...item}
+                           onRemove={handleRemoveItem}
+                           onUpdateQuantity={handleUpdateQuantity}
+                         />
+                       ))}
+                     </div>
+                   </div>
             <div className="mt-4 flex justify-end">
               <button
                 type="button"

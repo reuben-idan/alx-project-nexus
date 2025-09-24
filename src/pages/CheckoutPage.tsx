@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeft, Check, Truck, Shield, Lock } from 'lucide-react';
-import { formatCurrency } from '../lib/utils';
+import { formatCurrency, setLocalStorage } from '../lib/utils';
 import { clearCart, selectCartItems } from '../store/slices/cartSlice';
 import { AppDispatch } from '../store';
 import { Button } from '../components/ui/button';
@@ -43,25 +43,94 @@ const CheckoutPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<FormData>();
+    trigger,
+  } = useForm<FormData>({
+    defaultValues: {
+      email: '',
+      firstName: '',
+      lastName: '',
+      address: '',
+      apartment: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      phone: '',
+      saveInfo: false,
+      paymentMethod: 'credit-card',
+      cardNumber: '',
+      cardName: '',
+      cardExpiry: '',
+      cardCvv: '',
+    },
+  });
   
   const paymentMethod = watch('paymentMethod');
   
-  const onSubmit = async () => {
-    if (activeStep < 3) {
-      setActiveStep(activeStep + 1);
+  const onSubmit = async (data: FormData) => {
+    // Step validation + navigation
+    if (activeStep === 1) {
+      // Validate shipping/contact fields
+      const ok = await trigger([
+        'email',
+        'firstName',
+        'lastName',
+        'address',
+        'city',
+        'state',
+        'zipCode',
+        'phone',
+      ]);
+      if (!ok) return;
+      setActiveStep(2);
       return;
     }
-    
+
+    if (activeStep === 2) {
+      // Validate payment depending on method
+      const method = data.paymentMethod || watch('paymentMethod');
+      if (method === 'credit-card') {
+        const ok = await trigger(['cardNumber', 'cardName', 'cardExpiry', 'cardCvv']);
+        if (!ok) return;
+      }
+      setActiveStep(3);
+      return;
+    }
+
+    // Finalize order (activeStep === 3)
     setIsProcessing(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Clear cart and show success
-    dispatch(clearCart());
-    setOrderComplete(true);
-    setIsProcessing(false);
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+
+      // Optionally save shipping info
+      if (data.saveInfo) {
+        try {
+          setLocalStorage('shippingInfo', {
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            address: data.address,
+            apartment: data.apartment,
+            city: data.city,
+            state: data.state,
+            zipCode: data.zipCode,
+            phone: data.phone,
+          });
+        } catch (err) {
+          // ignore localStorage errors
+        }
+      }
+
+      // Clear cart and show success
+      dispatch(clearCart());
+      setOrderComplete(true);
+    } catch (err) {
+      console.error('Order submission failed', err);
+      // Could set an error state here and show to user
+    } finally {
+      setIsProcessing(false);
+    }
   };
   
   const handleBack = () => {
@@ -174,8 +243,104 @@ const CheckoutPage = () => {
               {/* Shipping Information */}
               {activeStep === 1 && (
                 <div className="glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl p-6 mb-8 rounded-xl border border-white/30">
-                  <h2 className="text-lg font-medium text-gray-900 mb-6">Contact Information</h2>
-                  ...existing code...
+                  <h2 className="text-lg font-medium text-gray-900 mb-6">Contact & Shipping</h2>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Email</label>
+                      <input
+                        type="email"
+                        {...register('email', { required: 'Email is required', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email' } })}
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.email ? 'border-red-500' : ''}`}
+                        placeholder="you@example.com"
+                      />
+                      {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">First name</label>
+                        <input
+                          type="text"
+                          {...register('firstName', { required: 'First name is required' })}
+                          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.firstName ? 'border-red-500' : ''}`}
+                        />
+                        {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Last name</label>
+                        <input
+                          type="text"
+                          {...register('lastName', { required: 'Last name is required' })}
+                          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.lastName ? 'border-red-500' : ''}`}
+                        />
+                        {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Address</label>
+                      <input
+                        type="text"
+                        {...register('address', { required: 'Address is required' })}
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.address ? 'border-red-500' : ''}`}
+                      />
+                      {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address.message}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Apartment, suite, etc. (optional)</label>
+                      <input
+                        type="text"
+                        {...register('apartment')}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">City</label>
+                        <input
+                          type="text"
+                          {...register('city', { required: 'City is required' })}
+                          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.city ? 'border-red-500' : ''}`}
+                        />
+                        {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">State</label>
+                        <input
+                          type="text"
+                          {...register('state', { required: 'State is required' })}
+                          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.state ? 'border-red-500' : ''}`}
+                        />
+                        {errors.state && <p className="mt-1 text-sm text-red-600">{errors.state.message}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">ZIP</label>
+                        <input
+                          type="text"
+                          {...register('zipCode', { required: 'ZIP code is required' })}
+                          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.zipCode ? 'border-red-500' : ''}`}
+                        />
+                        {errors.zipCode && <p className="mt-1 text-sm text-red-600">{errors.zipCode.message}</p>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Phone</label>
+                      <input
+                        type="tel"
+                        {...register('phone', { required: 'Phone number is required' })}
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${errors.phone ? 'border-red-500' : ''}`}
+                      />
+                      {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
+                    </div>
+
+                    <div className="flex items-center">
+                      <input type="checkbox" {...register('saveInfo')} id="saveInfo" className="h-4 w-4 text-green-600" />
+                      <label htmlFor="saveInfo" className="ml-2 text-sm text-gray-700">Save this information for next time</label>
+                    </div>
+                  </div>
                 </div>
               )}
               {/* Payment Information */}
@@ -400,8 +565,9 @@ const CheckoutPage = () => {
                           <div key={item.id} className="flex items-center">
                             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                               <img
-                                src={item.image || '/placeholder-product.png'}
+                                src={item.image || '/images/logo.png'}
                                 alt={item.name}
+                                onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/logo.png'; }}
                                 className="h-full w-full object-cover object-center"
                               />
                             </div>
@@ -457,14 +623,62 @@ const CheckoutPage = () => {
             <div className="lg:col-span-5">
               <div className="glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl p-6 rounded-xl border border-white/30">
                 <h2 className="text-lg font-medium text-gray-900 mb-6">Order Summary</h2>
-                ...existing code...
-                <div className="mt-6 flex items-center justify-center text-center text-sm text-gray-500">
-                  <p>
-                    or{' '}
-                    <Link to="/cart" className="font-medium text-green-600 hover:text-green-500">
-                      return to cart
-                    </Link>
-                  </p>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    {items.map((item) => (
+                      <div key={item.id} className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                            <img src={item.image || '/images/logo.png'} alt={item.name} onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/logo.png'; }} className="h-full w-full object-cover object-center" />
+                          </div>
+                          <div className="ml-3">
+                            <p className="text-sm font-medium text-gray-900">{item.name}</p>
+                            <p className="text-xs text-gray-500">Qty {item.quantity}</p>
+                          </div>
+                        </div>
+                        <div className="text-sm font-medium text-gray-900">{formatCurrency(item.price * item.quantity)}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Totals */}
+                  <div className="border-t border-gray-200 pt-4 space-y-2">
+                    {(() => {
+                      const subtotal = items.reduce((s, it) => s + it.price * it.quantity, 0);
+                      const shipping = subtotal > 50 || subtotal === 0 ? 0 : 5.99;
+                      const tax = subtotal * 0.1;
+                      const total = subtotal + shipping + tax;
+                      return (
+                        <div>
+                          <div className="flex items-center justify-between text-sm text-gray-600">
+                            <span>Subtotal</span>
+                            <span className="font-medium text-gray-900">{formatCurrency(subtotal)}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-sm text-gray-600">
+                            <span>Shipping</span>
+                            <span className="font-medium text-gray-900">{shipping === 0 ? 'Free' : formatCurrency(shipping)}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-sm text-gray-600">
+                            <span>Tax</span>
+                            <span className="font-medium text-gray-900">{formatCurrency(tax)}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-base font-medium text-gray-900 mt-3">
+                            <span>Total</span>
+                            <span>{formatCurrency(total)}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  <div className="mt-6 flex items-center justify-center text-center text-sm text-gray-500">
+                    <p>
+                      or{' '}
+                      <Link to="/cart" className="font-medium text-green-600 hover:text-green-500">
+                        return to cart
+                      </Link>
+                    </p>
+                  </div>
                 </div>
               </div>
               {/* Security Badges */}

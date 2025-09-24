@@ -31,21 +31,22 @@ const CartItem = ({
   };
 
   return (
-    <div className="flex items-center py-4">
-      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+    <div className="flex items-center py-4 gap-4">
+      <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
         <img
-          src={image || '/placeholder-product.png'}
+          src={image || '/images/logo.png'}
           alt={name}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/logo.png'; }}
           className="h-full w-full object-cover object-center"
         />
       </div>
-      <div className="ml-4 flex-1">
+      <div className="flex-1">
         <div>
           <h4 className="text-sm font-medium text-gray-900">{name}</h4>
           <p className="mt-1 text-sm text-gray-500">${price.toFixed(2)}</p>
         </div>
       </div>
-      <div className="ml-4 flex items-center">
+      <div className="flex items-center ml-4">
         <Button
           variant="outline"
           size="sm"

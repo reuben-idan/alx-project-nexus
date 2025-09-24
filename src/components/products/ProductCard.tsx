@@ -33,8 +33,9 @@ const ProductCard = ({
     >
       <div className="relative group">
         <img
-          src={product.images?.[0]?.url || "/placeholder.png"}
+          src={product.images?.[0]?.url || "/images/logo.png"}
           alt={product.name}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/logo.png'; }}
           className="w-full h-48 object-cover rounded-t-2xl"
         />
         <>
@@ -102,8 +103,9 @@ const ProductCard = ({
               ×
             </button>
             <img
-              src={product.images?.[0]?.url || "/placeholder.png"}
+              src={product.images?.[0]?.url || "/images/logo.png"}
               alt={product.name}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/logo.png'; }}
               className="w-full h-64 object-cover rounded-xl mb-4"
             />
             <h2 className="text-2xl font-bold mb-2 text-glass-900">

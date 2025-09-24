@@ -10,6 +10,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
+  "test:unit": "vitest",
+  "test:e2e": "playwright test",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\"",
     "prepare": "husky install",
@@ -78,7 +80,14 @@
     "vite-plugin-pwa": "^0.15.2",
     "vite-tsconfig-paths": "^4.0.5",
     "vitest": "^0.32.2",
-    "sharp": "^0.32.1"
+    "sharp": "^0.32.1",
+    "@playwright/test": "^1.39.0"
+  },
+  "vitest": {
+    "test": {
+      "environment": "jsdom",
+      "exclude": ["tests/e2e/**"]
+    }
   },
   "browserslist": {
     "production": [
