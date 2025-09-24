@@ -3,37 +3,37 @@ import { useParams, Link } from 'react-router-dom';
 
 // Example products for demo purposes
 const products = [
-  { id: 'p1', name: 'Fresh Apples', image: '/src/assets/images/apple.jpg', price: 2.99, description: 'Crisp and juicy apples.' },
-  { id: 'p2', name: 'Organic Spinach', image: '/src/assets/images/spinach.jpg', price: 1.99, description: 'Fresh organic spinach leaves.' },
-  { id: 'p3', name: 'Carrots', image: '/src/assets/images/carrots.jpg', price: 1.49, description: 'Sweet and crunchy carrots.' },
-  { id: 'p4', name: 'Bananas', image: '/src/assets/images/bananas.jpg', price: 1.29, description: 'Ripe bananas full of flavor.' },
+  { id: 'p1', name: 'Fresh Apples', image: '/images/apple.jpg', price: 2.99, description: 'Crisp and juicy apples.' },
+  { id: 'p2', name: 'Organic Spinach', image: '/images/spinach.jpg', price: 1.99, description: 'Fresh organic spinach leaves.' },
+  { id: 'p3', name: 'Carrots', image: '/images/carrots.jpg', price: 1.49, description: 'Sweet and crunchy carrots.' },
+  { id: 'p4', name: 'Bananas', image: '/images/bananas.jpg', price: 1.29, description: 'Ripe bananas full of flavor.' },
 ];
 
 const categoryMeta = {
   'fruits-vegetables': {
     name: 'Fruits & Vegetables',
     description: 'Shop the freshest produce, greens, and more.',
-    image: '/src/assets/images/fruits-vegetables.jpg',
+    image: '/images/fruits-vegetables.jpg',
   },
   'dairy-eggs': {
     name: 'Dairy & Eggs',
     description: 'Milk, cheese, eggs, and dairy products.',
-    image: '/src/assets/images/dairy-eggs.jpg',
+  image: '/images/dairy-eggs.jpg',
   },
   'meat-seafood': {
     name: 'Meat & Seafood',
     description: 'Quality meats and fresh seafood.',
-    image: '/src/assets/images/meat-seafood.jpg',
+  image: '/images/meat-seafood.jpg',
   },
   'bakery': {
     name: 'Bakery',
     description: 'Breads, pastries, and baked goods.',
-    image: '/src/assets/images/bakery.jpg',
+  image: '/images/bakery.jpg',
   },
   'beverages': {
     name: 'Beverages',
     description: 'Juices, sodas, and drinks.',
-    image: '/src/assets/images/beverages.jpg',
+  image: '/images/beverages.jpg',
   },
 };
 
