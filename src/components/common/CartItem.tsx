@@ -34,7 +34,7 @@ const CartItem = ({
     <div className="flex items-center py-4">
       <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
         <img
-          src={image || '/placeholder-product.jpg'}
+          src={image || '/placeholder-product.png'}
           alt={name}
           className="h-full w-full object-cover object-center"
         />

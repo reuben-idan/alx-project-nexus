@@ -39,27 +39,27 @@ const mockOrders: Order[] = [
     date: new Date(2023, 10, 15),
     status: 'delivered',
     total: 187.94,
-    items: [
+        items: [
       {
         id: '1',
         name: 'Organic Bananas',
         price: 0.99,
         quantity: 5,
-        image: '/bananas.jpg'
+            image: '/banana.png'
       },
       {
         id: '2',
         name: 'Organic Gala Apples',
         price: 2.49,
         quantity: 3,
-        image: '/apples.jpg'
+            image: '/apple.png'
       },
       {
         id: '3',
         name: 'Organic Free-Range Eggs',
         price: 4.99,
         quantity: 2,
-        image: '/eggs.jpg'
+            image: '/eggs.png'
       }
     ],
     shippingAddress: {
@@ -77,20 +77,20 @@ const mockOrders: Order[] = [
     date: new Date(2023, 10, 10),
     status: 'shipped',
     total: 89.97,
-    items: [
+        items: [
       {
         id: '4',
         name: 'Organic Chicken Breast',
         price: 8.99,
         quantity: 2,
-        image: '/chicken.jpg'
+            image: '/salmon.png'
       },
       {
         id: '5',
         name: 'Organic Brown Rice',
         price: 3.99,
         quantity: 1,
-        image: '/rice.jpg'
+            image: '/peas.png'
       }
     ],
     shippingAddress: {
@@ -108,20 +108,20 @@ const mockOrders: Order[] = [
     date: new Date(2023, 10, 5),
     status: 'processing',
     total: 32.97,
-    items: [
+        items: [
       {
         id: '6',
         name: 'Organic Spinach',
         price: 2.99,
         quantity: 3,
-        image: '/spinach.jpg'
+            image: '/peas.png'
       },
       {
         id: '7',
         name: 'Organic Strawberries',
         price: 4.99,
         quantity: 2,
-        image: '/strawberries.jpg'
+            image: '/almonds.png'
       }
     ],
     shippingAddress: {
@@ -138,20 +138,20 @@ const mockOrders: Order[] = [
     date: new Date(2023, 9, 28),
     status: 'cancelled',
     total: 45.98,
-    items: [
+        items: [
       {
         id: '8',
         name: 'Organic Avocados',
         price: 2.99,
         quantity: 4,
-        image: '/avocados.jpg'
+            image: '/banana.png'
       },
       {
         id: '9',
         name: 'Organic Blueberries',
         price: 4.99,
         quantity: 2,
-        image: '/blueberries.jpg'
+            image: '/orange-juice.png'
       }
     ],
     shippingAddress: {

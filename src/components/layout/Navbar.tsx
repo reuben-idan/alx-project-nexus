@@ -78,9 +78,6 @@ const Navbar: React.FC = () => {
               <span className="glass-title text-xl">Everything Grocery</span>
             </Link>
           </div>
-                <span className="glass-title text-xl">Everything Grocery</span>
-              </Link>
-            </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
@@ -212,7 +209,6 @@ const Navbar: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Mobile menu */}
       <AnimatePresence>

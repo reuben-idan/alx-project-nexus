@@ -400,7 +400,7 @@ const CheckoutPage = () => {
                           <div key={item.id} className="flex items-center">
                             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                               <img
-                                src={item.image || '/placeholder-product.jpg'}
+                                src={item.image || '/placeholder-product.png'}
                                 alt={item.name}
                                 className="h-full w-full object-cover object-center"
                               />

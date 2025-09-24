@@ -54,7 +54,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     isLoading = false,
     ...props
   }, ref) => {
-    const Comp = asChild ? Slot : 'button'
     const classNames = cn(
       buttonVariants({ variant, size }),
       isLoading && 'opacity-70 cursor-not-allowed',

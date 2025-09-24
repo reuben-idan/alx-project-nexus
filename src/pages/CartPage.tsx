@@ -51,7 +51,7 @@ const CartItem = ({
   <div className="flex items-center py-4 border-b border-gray-200 glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl">
       <div className="flex-shrink-0 h-24 w-24 overflow-hidden rounded-md border border-gray-200">
         <img
-          src={image || '/placeholder-product.jpg'}
+          src={image || '/placeholder-product.png'}
           alt={name}
           className="h-full w-full object-cover object-center"
         />
