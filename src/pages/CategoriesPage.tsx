@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const categories = [
-  { id: '1', name: 'Fruits & Vegetables', slug: 'fruits-vegetables', image: '/images/fruits-vegetables.jpg', description: 'Fresh produce, greens, and more.' },
-  { id: '2', name: 'Dairy & Eggs', slug: 'dairy-eggs', image: '/images/dairy-eggs.jpg', description: 'Milk, cheese, eggs, and dairy products.' },
-  { id: '3', name: 'Meat & Seafood', slug: 'meat-seafood', image: '/images/meat-seafood.jpg', description: 'Quality meats and fresh seafood.' },
-  { id: '4', name: 'Bakery', slug: 'bakery', image: '/images/bakery.jpg', description: 'Breads, pastries, and baked goods.' },
-  { id: '5', name: 'Beverages', slug: 'beverages', image: '/images/beverages.jpg', description: 'Juices, sodas, and drinks.' },
+  { id: '1', name: 'Fruits & Vegetables', slug: 'fruits-vegetables', image: '/images/Fruits & Vegetables.png', description: 'Fresh produce, greens, and more.' },
+  { id: '2', name: 'Dairy & Eggs', slug: 'dairy-eggs', image: '/images/milk.png', description: 'Milk, cheese, eggs, and dairy products.' },
+  { id: '3', name: 'Meat & Seafood', slug: 'meat-seafood', image: '/images/salmon.png', description: 'Quality meats and fresh seafood.' },
+  { id: '4', name: 'Bakery', slug: 'bakery', image: '/images/Bakery.png', description: 'Breads, pastries, and baked goods.' },
+  { id: '5', name: 'Beverages', slug: 'beverages', image: '/images/orange-juice.png', description: 'Juices, sodas, and drinks.' },
 ];
 
 const CategoriesPage: React.FC = () => {

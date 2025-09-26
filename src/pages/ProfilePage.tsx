@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import LogoutButton from '../features/auth/components/LogoutButton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { User, Camera, MapPin, CreditCard, Bell, Shield, Pencil, Plus, XCircle, CheckCircle } from 'lucide-react';
 
 // Removed unused type 'FormData'
 
@@ -86,7 +88,7 @@ const ProfilePage = () => {
     }
   };
   const removeAddress = (idx: number) => {
-    setAddresses(addresses.filter((_, i) => i !== idx));
+    setAddresses(addresses.filter((_: any, i: number) => i !== idx));
   };
 
   // Security
@@ -301,7 +303,7 @@ const ProfilePage = () => {
                   {addresses.length === 0 ? (
                     <div className="text-glass-500">No addresses added yet.</div>
                   ) : (
-                    addresses.map((addr, idx) => (
+                    addresses.map((addr: string, idx: number) => (
                       <motion.div key={idx} layout className="flex items-center justify-between bg-white/40 rounded-xl px-4 py-2 shadow">
                         <span>{addr}</span>
                         <button className="text-red-500 hover:text-red-700" onClick={() => removeAddress(idx)}>
@@ -346,7 +348,7 @@ const ProfilePage = () => {
                   {notif.length === 0 ? (
                     <div className="text-glass-500">No notifications yet.</div>
                   ) : (
-                    notif.map((n, idx) => (
+                    notif.map((n: string, idx: number) => (
                       <motion.div key={idx} layout className="bg-white/40 rounded-xl px-4 py-2 shadow flex items-center gap-2">
                         <Bell className="h-5 w-5 text-green-400" />
                         <span>{n}</span>

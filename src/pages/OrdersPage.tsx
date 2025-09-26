@@ -6,7 +6,7 @@ import { formatCurrency } from '../lib/utils';
 import { Button } from '../components/ui/button';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { Order, OrderStatus } from '../store/slices/ordersSlice';
+import { OrderStatus } from '../store/slices/ordersSlice';
 
 const statusIcons = {
   processing: <RefreshCw className="h-4 w-4 text-amber-500 animate-spin" />,
@@ -23,13 +23,13 @@ const statusColors = {
 };
 
 const OrdersPage = () => {
-  const orders = useSelector((state: RootState) => state.orders?.orders || []);
+  const orders = useSelector((state: RootState) => (state as any).orders?.orders || []);
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | 'all'>('all');
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const filteredOrders = selectedStatus === 'all'
     ? orders
-    : orders.filter(order => order.status === selectedStatus);
+    : orders.filter((order: any) => order.status === selectedStatus);
 
   const toggleOrder = (orderId: string) => {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);
@@ -97,14 +97,14 @@ const OrdersPage = () => {
                 </div>
               </div>
             ) : (
-              filteredOrders.map((order) => (
+              filteredOrders.map((order: any) => (
                 <div key={order.id} className="border border-white/30 rounded-xl overflow-hidden glass-card backdrop-blur-lg bg-gradient-to-br from-white/60 via-white/30 to-green-100/40 shadow-xl">
                   {/* Order Header */}
                   <div className="bg-gradient-to-r from-white/60 via-green-50/40 to-green-100/40 px-4 py-4 sm:px-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center">
                         <h3 className="text-lg font-medium text-gray-900">Order #{order.id}</h3>
-                        <span className={`ml-3 px-2.5 py-0.5 text-xs font-medium rounded-full glass-card backdrop-blur-lg shadow ${statusColors[order.status]}`}>{getStatusText(order.status)}</span>
+                        <span className={`ml-3 px-2.5 py-0.5 text-xs font-medium rounded-full glass-card backdrop-blur-lg shadow ${statusColors[order.status as keyof typeof statusColors]}`}>{getStatusText(order.status)}</span>
                       </div>
                       <div className="mt-2 sm:mt-0 text-sm text-gray-500">
                         <time dateTime={order.date.toISOString()}>{format(order.date, 'MMMM d, yyyy')}</time>
@@ -125,7 +125,7 @@ const OrdersPage = () => {
                     <div className="px-4 py-6 sm:px-6 border-t border-white/30">
                       <h4 className="sr-only">Items</h4>
                       <ul role="list" className="divide-y divide-gray-200">
-                        {order.items.map((item) => (
+                        {order.items.map((item: any) => (
                           <li key={item.id} className="py-4">
                             <div className="flex items-center">
                               <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-white/30 glass-card backdrop-blur-lg">

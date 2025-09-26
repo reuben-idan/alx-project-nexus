@@ -415,7 +415,7 @@ const CheckoutPage = () => {
                                   message: 'Invalid card number format'
                                 },
                                 validate: {
-                                  luhn: (value) => {
+                                  luhn: (value: string) => {
                                     const cleanValue = value.replace(/\s/g, '');
                                     if (cleanValue.length < 13) return 'Card number too short';
                                     
