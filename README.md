@@ -152,7 +152,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Give a ⭐️ if this project helped you!
 
-For any questions or feedback, please reach out to [your-reuben.idan@gmail.com](mailto:reuben.idan@gmail.com).
+For any questions or feedback, please reach out to [reuben.idan@gmail.com](mailto:reuben.idan@gmail.com).
 
 ---
 
