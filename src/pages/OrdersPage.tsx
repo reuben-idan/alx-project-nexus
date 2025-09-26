@@ -67,8 +67,12 @@ const statusColors = {
 
 const OrdersPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { orders = [], loading, error } = useSelector((state: RootState) => ({
-    orders: state.orders?.orders || [],
+  const { orders = [] } = useSelector((state: RootState) => ({
+    orders: state.orders?.orders || []
+  }));
+  
+  // Get loading and error states
+  const { loading = false, error = null } = useSelector((state: RootState) => ({
     loading: state.orders?.loading || false,
     error: state.orders?.error || null
   }));
@@ -76,6 +80,43 @@ const OrdersPage = () => {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "all">("all");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">
+                Error loading orders: {error}
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-2 text-sm font-medium text-red-700 hover:text-red-600"
+              >
+                Try again →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Load orders and set up status progression
   useEffect(() => {
