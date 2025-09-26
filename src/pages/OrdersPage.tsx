@@ -67,16 +67,25 @@ const statusColors = {
 
 const OrdersPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const orders = useSelector((state: RootState) => state.orders.orders || []);
-  const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "all">(
-    "all"
-  );
+  const { orders = [], loading, error } = useSelector((state: RootState) => ({
+    orders: state.orders?.orders || [],
+    loading: state.orders?.loading || false,
+    error: state.orders?.error || null
+  }));
+  
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "all">("all");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Automatically progress order statuses on component mount and every minute
+  // Load orders and set up status progression
   useEffect(() => {
-    dispatch(progressOrderStatuses());
+    // Only run this effect once on component mount
+    if (!isInitialized) {
+      dispatch(progressOrderStatuses());
+      setIsInitialized(true);
+    }
 
+    // Set up interval for order status progression
     const interval = setInterval(() => {
       dispatch(progressOrderStatuses());
     }, 60000); // Check every minute
