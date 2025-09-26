@@ -13,31 +13,31 @@
   [![GitHub stars](https://img.shields.io/github/stars/reuben-idan/alx-project-nexus?style=social)](https://github.com/reuben-idan/alx-project-nexus/stargazers)
 </div>
 
-## 🚀 Features
+##  Features
 
 ### Core Features
-- 🛒 **Modern Shopping Experience**
+-  **Modern Shopping Experience**
   - Instant search with debouncing
   - Product filtering & sorting
   - Infinite scroll & pagination
   - Real-time inventory updates
 
 ### User Experience
-- ✨ **Responsive Design**
+-  **Responsive Design**
   - Mobile-first approach
   - PWA support (Installable on devices)
   - Dark/Light mode support
   - Optimized performance (Lazy loading, Code splitting)
 
 ### Technical Highlights
-- ⚡ **Cutting-Edge Stack**
+-  **Cutting-Edge Stack**
   - Built with Vite for lightning-fast builds
   - TypeScript for type safety
   - Redux Toolkit for state management
   - React Router 6 for navigation
   - Tailwind CSS for styling
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Category        | Technologies                                                                 |
 |----------------|-----------------------------------------------------------------------------|
@@ -48,7 +48,7 @@
 | **Linting**    | ESLint, Prettier, Husky (Git Hooks)                                         |
 | **Deployment** | Vercel (Frontend), Netlify (Preview), GitHub Actions (CI/CD)                |
 
-## 📦 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -85,7 +85,7 @@
    npm run preview
    ```
 
-## 🧪 Testing
+##  Testing
 
 Run the test suite:
 ```bash
@@ -99,7 +99,7 @@ Run tests with coverage:
 npm test:coverage
 ```
 
-## 🧩 Project Structure
+##  Project Structure
 
 ```
 src/
@@ -119,7 +119,7 @@ src/
 └── types/           # TypeScript type definitions
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! Please follow these steps:
 
@@ -131,16 +131,16 @@ We welcome contributions! Please follow these steps:
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📬 Contact
+##  Contact
 
 - **Project Link**: [https://github.com/reuben-idan/alx-project-nexus](https://github.com/reuben-idan/alx-project-nexus)
 - **Issues**: [GitHub Issues](https://github.com/reuben-idan/alx-project-nexus/issues)
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - [React](https://reactjs.org/) - A JavaScript library for building user interfaces
 - [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript at Any Scale
@@ -148,7 +148,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Redux Toolkit](https://redux-toolkit.js.org/) - The official, opinionated Redux setup
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
 
-## 🌟 Show Your Support
+##  Show Your Support
 
 Give a ⭐️ if this project helped you!
 
