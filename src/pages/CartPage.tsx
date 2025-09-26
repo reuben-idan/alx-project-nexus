@@ -21,8 +21,8 @@ type CartItemProps = {
   quantity: number;
   image?: string;
   stock: number;
-  onRemove: (productId: string) => void;
-  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemove: (itemId: string) => void;
+  onUpdateQuantity: (itemId: string, quantity: number) => void;
 };
 
 const CartItem = ({
@@ -38,13 +38,13 @@ const CartItem = ({
 }: CartItemProps) => {
   const handleIncrement = () => {
     if (quantity < stock) {
-      onUpdateQuantity(productId, quantity + 1);
+      onUpdateQuantity(id, quantity + 1);
     }
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      onUpdateQuantity(productId, quantity - 1);
+      onUpdateQuantity(id, quantity - 1);
     }
   };
 
@@ -106,7 +106,7 @@ const CartItem = ({
           
           <button
             type="button"
-            onClick={() => onRemove(productId)}
+            onClick={() => onRemove(id)}
             className="ml-4 text-sm font-medium text-red-600 hover:text-red-500 sm:mt-2"
           >
             <X className="h-5 w-5" />
@@ -126,12 +126,12 @@ const CartPage = () => {
   const tax = total * 0.1; // 10% tax
   const orderTotal = total + shipping + tax;
 
-  const handleRemoveItem = (productId: string) => {
-    dispatch(removeFromCart(productId));
+  const handleRemoveItem = (itemId: string) => {
+    dispatch(removeFromCart(itemId));
   };
 
-  const handleUpdateQuantity = (productId: string, quantity: number) => {
-    dispatch(updateCartItemQuantity({ itemId: productId, quantity }));
+  const handleUpdateQuantity = (itemId: string, quantity: number) => {
+    dispatch(updateCartItemQuantity({ itemId, quantity }));
   };
 
   const handleClearCart = () => {
@@ -166,6 +166,8 @@ const CartPage = () => {
         <div className="mt-8 lg:grid lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             <h2 id="cart-heading" className="sr-only">Items in your shopping cart</h2>
+            <div className="border-t border-b border-gray-200">
+              <div className="flex flex-col gap-4 py-4">
                 {items.map((item) => (
                   <CartItem
                     key={item.id}
@@ -174,18 +176,8 @@ const CartPage = () => {
                     onUpdateQuantity={handleUpdateQuantity}
                   />
                 ))}
-                   <div className="border-t border-b border-gray-200">
-                     <div className="flex flex-col gap-4 py-4">
-                       {items.map((item) => (
-                         <CartItem
-                           key={item.id}
-                           {...item}
-                           onRemove={handleRemoveItem}
-                           onUpdateQuantity={handleUpdateQuantity}
-                         />
-                       ))}
-                     </div>
-                   </div>
+              </div>
+            </div>
             <div className="mt-4 flex justify-end">
               <button
                 type="button"

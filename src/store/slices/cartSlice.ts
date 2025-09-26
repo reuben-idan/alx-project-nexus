@@ -86,7 +86,7 @@ const cartSlice = createSlice({
   reducers: {
     // Add item to cart or update quantity if already exists
     addToCart: (state, action: PayloadAction<{ product: Product; quantity?: number; variantId?: string }>) => {
-      const { product, quantity = 1, variantId } = action.payload;
+      const { product, variantId } = action.payload;
       const now = new Date().toISOString();
       
       // Find existing item
@@ -100,8 +100,8 @@ const cartSlice = createSlice({
         : null;
       
       if (existingItemIndex >= 0) {
-        // Update quantity if item exists
-        state.items[existingItemIndex].quantity += quantity;
+        // Update quantity if item exists - only add 1 at a time
+        state.items[existingItemIndex].quantity += 1;
         state.items[existingItemIndex].updatedAt = now;
       } else {
         // Create new cart item
@@ -112,7 +112,7 @@ const cartSlice = createSlice({
           name: variant ? `${product.name} - ${variant.name}` : product.name,
           price: variant?.price ?? product.price,
           originalPrice: variant?.originalPrice ?? product.originalPrice,
-          quantity,
+          quantity: 1, // Always start with quantity 1
           image: variant?.images?.[0]?.url ?? product.images?.[0]?.url ?? '',
           stock: variant?.stock ?? product.stock ?? 0,
           sku: variant?.sku ?? product.sku ?? '',

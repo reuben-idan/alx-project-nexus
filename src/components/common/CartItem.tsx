@@ -2,17 +2,18 @@ import { Minus, Plus, X } from 'lucide-react';
 import { Button } from '../ui/button';
 
 export interface CartItemProps {
+  id: string;
   productId: string;
   name: string;
   price: number;
   quantity: number;
   image?: string;
-  onRemove: (productId: string) => void;
-  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemove: (itemId: string) => void;
+  onUpdateQuantity: (itemId: string, quantity: number) => void;
 }
 
 const CartItem = ({
-  productId,
+  id,
   name,
   price,
   quantity,
@@ -21,12 +22,12 @@ const CartItem = ({
   onUpdateQuantity
 }: CartItemProps) => {
   const handleIncrement = () => {
-    onUpdateQuantity(productId, quantity + 1);
+    onUpdateQuantity(id, quantity + 1);
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      onUpdateQuantity(productId, quantity - 1);
+      onUpdateQuantity(id, quantity - 1);
     }
   };
 
@@ -71,7 +72,7 @@ const CartItem = ({
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onRemove(productId)}
+          onClick={() => onRemove(id)}
         >
           <X className="h-4 w-4" />
         </Button>
