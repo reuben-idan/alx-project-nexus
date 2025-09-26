@@ -4,19 +4,18 @@ import { Toaster } from 'sonner';
 import { Helmet } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { useAppSelector } from './hooks/useAppSelector';
 import { selectIsAuthenticated } from './store/slices/authSlice';
+import { useAppSelector } from './store/hooks';
 import Layout from './components/layout/Layout';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import ProductGalleryDemo from './components/products/ProductGalleryDemo';
-import CategoriesPage from './pages/CategoriesPage';
-import CategoryDetailPage from './pages/CategoryDetailPage';
-const NewArrivalsPage = lazy(() => import('./pages/NewArrivalsPage'));
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage'));
+const NewArrivalsPage = lazy(() => import('./pages/NewArrivalsPage'));
+const DealsPage = lazy(() => import('./pages/DealsPage'));
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
@@ -24,6 +23,8 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const OrdersPage = lazy(() => import('./pages/OrdersPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const CategoriesPage = lazy(() => import('./pages/CategoriesPage'));
+const CategoryDetailPage = lazy(() => import('./pages/CategoryDetailPage'));
 
 // Protected route component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -69,6 +70,7 @@ const App: React.FC = () => {
               <Route index element={<HomePage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="new-arrivals" element={<NewArrivalsPage />} />
+              <Route path="deals" element={<DealsPage />} />
               <Route path="products/:id" element={<ProductDetailPage />} />
               <Route path="categories" element={<CategoriesPage />} />
               <Route path="categories/:slug" element={<CategoryDetailPage />} />
