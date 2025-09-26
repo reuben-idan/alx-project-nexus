@@ -90,7 +90,7 @@ const HomePage = () => {
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
-                  to="/products?category=on-sale"
+                  to="/deals"
                   className="btn-outline-glass inline-flex items-center text-lg font-semibold px-8 py-4"
                 >
                   <Star className="mr-3 h-6 w-6" />
