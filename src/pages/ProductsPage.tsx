@@ -5,7 +5,6 @@ import { fetchProducts } from '../store/slices/productsSlice';
 import { addToCart } from '../store/slices/cartSlice';
 import { Product, ProductFilterOptions, ProductSortOption } from '../types/product';
 import { toast } from 'sonner';
-import { ShoppingCart, Heart, Eye, Star } from 'lucide-react';
 
 // Components
 import ProductCard from '../components/products/ProductCard';
@@ -61,9 +60,10 @@ const ProductsPage = () => {
     fetchData();
   }, [dispatch, currentPage, itemsPerPage, sortBy, filters]);
 
-  // Handle add to cart
+  // Handle add to cart state
   const [addedToCart, setAddedToCart] = useState<{[key: string]: boolean}>({});
   
+  // Function to handle adding to cart with proper product type
   const handleAddToCart = useCallback((product: Product) => {
     dispatch(addToCart({
       product: {
@@ -77,17 +77,27 @@ const ProductsPage = () => {
         category: product.category,
         isOnSale: product.isOnSale,
         originalPrice: product.originalPrice,
-        isNew: product.isNew
+        isNew: product.isNew,
+        slug: product.slug || `product-${product.id}`,
+        shortDescription: product.shortDescription || (product.description ? product.description.substring(0, 100) + '...' : ''),
+        reviewCount: product.reviewCount || 0,
+        sku: product.sku || `SKU-${product.id}`,
+        tags: product.tags || [],
+        isFeatured: product.isFeatured || false,
+        isInStock: product.isInStock !== undefined ? product.isInStock : true,
+        isAvailable: product.isAvailable !== undefined ? product.isAvailable : true,
+        createdAt: product.createdAt || new Date().toISOString(),
+        updatedAt: product.updatedAt || new Date().toISOString()
       },
       quantity: 1
     }));
-    
+
     // Show visual feedback
     setAddedToCart(prev => ({
       ...prev,
       [product.id]: true
     }));
-    
+
     // Show success toast
     toast.success(`${product.name} added to cart`, {
       position: 'top-right',
@@ -102,11 +112,6 @@ const ProductsPage = () => {
       }));
     }, 2000);
   }, [dispatch]);
-
-  // Add animation to add to cart button
-  const addCartButtonAnimation = (product: Product) => {
-    return addedToCart[product.id] ? 'animate-check' : '';
-  };
 
   // Handle filter changes
   const handleFilterChange = (newFilters: Partial<ProductFilterOptions>) => {

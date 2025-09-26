@@ -6,7 +6,6 @@ import { addToCart } from '../store/slices/cartSlice';
 import ProductCard from '../components/products/ProductCard';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
-import { ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 
 const NewArrivalsPage = () => {
