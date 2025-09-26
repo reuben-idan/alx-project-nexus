@@ -252,21 +252,21 @@ export const selectCoupon = (state: RootState) => state.cart.coupon;
 
 export const selectCartItemCount = createSelector(
   [selectCartItems],
-  (items) => items.reduce((count, item) => count + item.quantity, 0)
+  (items: CartItem[]) => items.reduce((count: number, item: CartItem) => count + item.quantity, 0)
 );
 
 export const selectIsItemInCart = (productId: string, variantId?: string) => 
   createSelector(
     [selectCartItems],
-    (items) => items.some(
-      item => item.productId === productId && item.variantId === variantId
+    (items: CartItem[]) => items.some(
+      (item: CartItem) => item.productId === productId && item.variantId === variantId
     )
   );
 
 export const selectCartItemById = (itemId: string) => 
   createSelector(
     [selectCartItems],
-    (items) => items.find(item => item.id === itemId)
+    (items: CartItem[]) => items.find((item: CartItem) => item.id === itemId)
   );
 
 // Export actions

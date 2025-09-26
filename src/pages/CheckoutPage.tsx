@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ArrowLeft, Check, Truck, Shield, Lock } from "lucide-react";
 import { formatCurrency, setLocalStorage } from "../lib/utils";
+import { CartItem } from "../types/cart";
 import { clearCart, selectCartItems } from "../store/slices/cartSlice";
 import { addOrder } from "../store/slices/ordersSlice";
 import { AppDispatch } from "../store";
@@ -111,14 +112,14 @@ const CheckoutPage = () => {
 
       // Create order from checkout data
       const orderData = {
-        items: items.map((item) => ({
+        items: items.map((item: CartItem) => ({
           id: item.id,
           name: item.name,
           price: item.price,
           quantity: item.quantity,
           image: item.image || "/images/logo.png",
         })),
-        total: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        total: items.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0),
         shippingAddress: {
           name: `${data.firstName} ${data.lastName}`,
           street: data.address,
@@ -810,7 +811,7 @@ const CheckoutPage = () => {
                         Order Items
                       </h3>
                       <div className="space-y-4">
-                        {items.map((item) => (
+                        {items.map((item: CartItem) => (
                           <div key={item.id} className="flex items-center">
                             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                               <img
@@ -877,7 +878,7 @@ const CheckoutPage = () => {
                 </h2>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    {items.map((item) => (
+                    {items.map((item: CartItem) => (
                       <div
                         key={item.id}
                         className="flex items-center justify-between"
@@ -914,7 +915,7 @@ const CheckoutPage = () => {
                   <div className="border-t border-gray-200 pt-4 space-y-2">
                     {(() => {
                       const subtotal = items.reduce(
-                        (s, it) => s + it.price * it.quantity,
+                        (s: number, it: CartItem) => s + it.price * it.quantity,
                         0
                       );
                       const shipping =

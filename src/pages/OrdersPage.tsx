@@ -14,11 +14,42 @@ import { Link } from "react-router-dom";
 import { formatCurrency } from "../lib/utils";
 import { Button } from "../components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../store";
-import {
-  OrderStatus,
-  progressOrderStatuses,
-} from "../store/slices/ordersSlice";
+import { AppDispatch } from "../store";
+import { OrderStatus, progressOrderStatuses } from "../store/slices/ordersSlice";
+
+// Define the RootState type to include all slices
+type RootState = {
+  cart: any;
+  auth: any;
+  ui: any;
+  products: any;
+  orders: {
+    orders: Array<{
+      id: string;
+      date: Date;
+      status: OrderStatus;
+      items: Array<{
+        id: string;
+        name: string;
+        price: number;
+        quantity: number;
+        image: string;
+      }>;
+      total: number;
+      shippingAddress: {
+        name: string;
+        street: string;
+        city: string;
+        state: string;
+        zipCode: string;
+      };
+      paymentMethod: string;
+      trackingNumber?: string;
+    }>;
+    loading: boolean;
+    error: string | null;
+  };
+};
 
 const statusIcons = {
   processing: <RefreshCw className="h-4 w-4 text-amber-500 animate-spin" />,
@@ -36,7 +67,7 @@ const statusColors = {
 
 const OrdersPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const orders = useSelector((state: RootState) => state.orders?.orders || []);
+  const orders = useSelector((state: RootState) => state.orders.orders || []);
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "all">(
     "all"
   );

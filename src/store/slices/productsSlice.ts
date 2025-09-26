@@ -295,8 +295,8 @@ export const selectFilters = (state: RootState) => state.products.filters;
 
 export const selectFilteredProducts = createSelector(
   [selectProducts, selectFilters],
-  (products, filters) => {
-    return products.filter((product) => {
+  (products: Product[], filters) => {
+    return products.filter((product: Product) => {
       // Filter by category
       if (filters.category && product.category !== filters.category) {
         return false;
@@ -337,7 +337,7 @@ export const selectFilteredProducts = createSelector(
       }
       
       // Filter by tags
-      if (filters.tags.length > 0 && !filters.tags.some(tag => product.tags.includes(tag))) {
+      if (filters.tags.length > 0 && !filters.tags.some((tag: string) => product.tags.includes(tag))) {
         return false;
       }
       

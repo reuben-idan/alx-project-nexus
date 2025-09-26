@@ -9,6 +9,7 @@ import {
   selectCartItems,
   selectCartTotal
 } from '../store/slices/cartSlice';
+import type { CartItem } from '../types/cart';
 import { AppDispatch } from '../store';
 import { Button } from '../components/ui/button';
 import productsMock from '../mocks/products.mock.json';
@@ -168,7 +169,7 @@ const CartPage = () => {
             <h2 id="cart-heading" className="sr-only">Items in your shopping cart</h2>
             <div className="border-t border-b border-gray-200">
               <div className="flex flex-col gap-4 py-4">
-                {items.map((item) => (
+                {items.map((item: CartItem) => (
                   <CartItem
                     key={item.id}
                     {...item}
