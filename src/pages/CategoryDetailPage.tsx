@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../store/slices/cartSlice';
 import { AppDispatch } from '../store';
+import { toast } from 'sonner';
+import { ShoppingCart } from 'lucide-react';
 
 import { Product } from '../types/product';
 
@@ -137,10 +139,59 @@ const CategoryDetailPage: React.FC = () => {
   const { slug } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const meta = categoryMeta[slug as keyof typeof categoryMeta];
+  const [addedToCart, setAddedToCart] = useState<{[key: string]: boolean}>({});
 
-  const handleAddToCart = (product: Product) => {
-    dispatch(addToCart({ product, quantity: 1 }));
-  };
+  const handleAddToCart = useCallback((product: Product) => {
+    const { id, name, price, images, description, stock, rating, category, isOnSale, originalPrice, isNew } = product;
+    
+    dispatch(addToCart({ 
+      product: {
+        id,
+        name,
+        price,
+        images,
+        description,
+        stock,
+        rating,
+        category,
+        isOnSale,
+        originalPrice,
+        isNew,
+        // Add required properties with default values
+        slug: product.slug || `product-${id}`,
+        shortDescription: product.shortDescription || description.substring(0, 100) + '...',
+        reviewCount: product.reviewCount || 0,
+        sku: product.sku || `SKU-${id}`,
+        tags: product.tags || [],
+        isFeatured: product.isFeatured || false,
+        isInStock: product.isInStock !== undefined ? product.isInStock : true,
+        isAvailable: product.isAvailable !== undefined ? product.isAvailable : true,
+        createdAt: product.createdAt || new Date().toISOString(),
+        updatedAt: product.updatedAt || new Date().toISOString()
+      },
+      quantity: 1 
+    }));
+    
+    // Show visual feedback
+    setAddedToCart(prev => ({
+      ...prev,
+      [product.id]: true
+    }));
+    
+    // Show success toast
+    toast.success(`${product.name} added to cart`, {
+      position: 'top-right',
+      duration: 2000,
+    });
+    
+    // Reset feedback after animation
+    setTimeout(() => {
+      setAddedToCart(prev => ({
+        ...prev,
+        [product.id]: false
+      }));
+    }, 2000);
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-glass-100 via-white/60 to-glass-200 py-12 px-4 sm:px-6 lg:px-8">
@@ -177,10 +228,27 @@ const CategoryDetailPage: React.FC = () => {
                 )}
               </div>
               <button
-                className="btn-water px-4 py-2 rounded-full mt-2"
                 onClick={() => handleAddToCart(product)}
+                disabled={addedToCart[product.id]}
+                className={`w-full mt-2 px-4 py-2 rounded-full font-medium text-sm flex items-center justify-center gap-2 shadow-lg transition-all duration-300 ${
+                  addedToCart[product.id] 
+                    ? 'bg-green-500 text-white' 
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-xl hover:scale-105'
+                }`}
               >
-                Add to Cart
+                {addedToCart[product.id] ? (
+                  <>
+                    <svg className="animate-check w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Added!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="h-4 w-4" />
+                    Add to Cart
+                  </>
+                )}
               </button>
             </div>
           ))}

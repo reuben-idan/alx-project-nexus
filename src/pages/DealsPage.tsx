@@ -7,7 +7,7 @@ import { selectProducts, selectLoading, selectError, fetchProducts } from '../st
 import { addToCart } from '../store/slices/cartSlice';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { Button } from '../components/ui/button';
-import { RefreshCw, ShoppingCart } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
 const DealsPage: React.FC = () => {
@@ -19,9 +19,10 @@ const DealsPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<'bestDiscount' | 'priceLowToHigh' | 'priceHighToLow' | 'bestRating'>('bestDiscount');
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
+  const [addedToCart, setAddedToCart] = useState<{[key: string]: boolean}>({});
   
   // Handle add to cart
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = useCallback((product: Product) => {
     dispatch(addToCart({
       product: {
         id: product.id,
@@ -34,16 +35,42 @@ const DealsPage: React.FC = () => {
         category: product.category,
         isOnSale: product.isOnSale,
         originalPrice: product.originalPrice,
-        discount: product.discount
+        discount: product.discount,
+        isNew: product.isNew,
+        slug: product.slug || `product-${product.id}`,
+        shortDescription: product.shortDescription || (product.description ? product.description.substring(0, 100) + '...' : ''),
+        reviewCount: product.reviewCount || 0,
+        sku: product.sku || `SKU-${product.id}`,
+        tags: product.tags || [],
+        isFeatured: product.isFeatured || false,
+        isInStock: product.isInStock !== undefined ? product.isInStock : true,
+        isAvailable: product.isAvailable !== undefined ? product.isAvailable : true,
+        createdAt: product.createdAt || new Date().toISOString(),
+        updatedAt: product.updatedAt || new Date().toISOString()
       },
       quantity: 1
     }));
     
+    // Show visual feedback
+    setAddedToCart(prev => ({
+      ...prev,
+      [product.id]: true
+    }));
+    
+    // Show success toast
     toast.success(`${product.name} added to cart`, {
       position: 'top-right',
       duration: 2000,
     });
-  };
+    
+    // Reset feedback after animation
+    setTimeout(() => {
+      setAddedToCart(prev => ({
+        ...prev,
+        [product.id]: false
+      }));
+    }, 2000);
+  }, [dispatch]);
 
   const loadProducts = useCallback(async () => {
     try {
@@ -143,43 +170,55 @@ const DealsPage: React.FC = () => {
       <div className="relative">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {currentProducts.map((product) => (
-            <div key={product.id} className="relative group">
+            <div key={product.id} className="relative">
               <ProductCard 
                 product={product}
                 onAddToCart={handleAddToCart}
+                showAddToCart={true}
+                addedToCart={addedToCart[product.id] || false}
               />
-              <button
-                onClick={() => handleAddToCart(product)}
-                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium text-sm flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform transition-all"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                Add to Cart
-              </button>
             </div>
           ))}
         </div>
         
-        <div className="mt-12 p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg relative overflow-hidden">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-            Subscribe & Get 15% Off Your First Order!
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-6 max-w-2xl">
-            Join our newsletter and be the first to know about exclusive deals, new arrivals, and special promotions. 
-            Plus, get 15% off your first order when you subscribe today!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md">
-            <input 
-              type="email" 
-              placeholder="Enter your email" 
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-            />
-            <button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-              Subscribe & Save 15%
-            </button>
+        {currentProducts.length > 0 && (
+          <div className="mt-12 p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg relative overflow-hidden">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+              Subscribe & Get 15% Off Your First Order!
+            </h2>
+            <p className="text-gray-700 dark:text-gray-300 mb-6 max-w-2xl">
+              Join our newsletter and be the first to know about exclusive deals, new arrivals, and special promotions. 
+              Plus, get 15% off your first order when you subscribe today!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md">
+              <input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              />
+              <button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                Subscribe & Save 15%
+              </button>
+            </div>
           </div>
-          <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-200/20 dark:bg-amber-500/10 rounded-full"></div>
-          <div className="absolute -right-20 -top-20 w-80 h-80 bg-amber-100/10 dark:bg-amber-500/5 rounded-full"></div>
-        </div>
+        )}
+        
+        {/* Pagination */}
+        {filteredProducts.length > productsPerPage && (
+          <div className="mt-12 flex justify-center">
+            <div className="flex gap-2">
+              {Array.from({ length: Math.ceil(filteredProducts.length / productsPerPage) }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`px-4 py-2 rounded-md ${currentPage === index + 1 ? 'bg-amber-600 text-white' : 'bg-gray-100 dark:bg-gray-700'}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

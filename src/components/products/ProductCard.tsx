@@ -6,12 +6,16 @@ interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
   glassmorphic?: boolean;
+  showAddToCart?: boolean;
+  addedToCart?: boolean;
 }
 
 const ProductCard = ({
   product,
   onAddToCart,
   glassmorphic = false,
+  showAddToCart = true,
+  addedToCart = false,
 }: ProductCardProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
@@ -115,13 +119,32 @@ const ProductCard = ({
               <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0})</span>
             </div>
           </div>
-          <button
-            className="btn-water px-3 py-2 rounded-full font-semibold shadow flex items-center gap-1 hover:scale-105 transition-transform"
-            onClick={handleAddToCart}
-            aria-label="Add to cart"
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </button>
+          {showAddToCart && (
+            <button
+              className={`px-4 py-2 rounded-full font-semibold shadow flex items-center gap-1 transition-all duration-300 ${
+                addedToCart
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg hover:scale-105'
+              }`}
+              onClick={handleAddToCart}
+              disabled={addedToCart}
+              aria-label={addedToCart ? 'Added to cart' : 'Add to cart'}
+            >
+              {addedToCart ? (
+                <>
+                  <svg className="animate-check w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-sm">Added!</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4" />
+                  <span className="text-sm">Add to Cart</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
       {/* Quick View Modal */}

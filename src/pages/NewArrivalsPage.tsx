@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { fetchNewArrivals } from '../store/slices/productsSlice';
@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 const NewArrivalsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { newArrivals, loading, error } = useSelector((state: RootState) => state.products);
+  const [addedToCart, setAddedToCart] = useState<{[key: string]: boolean}>({});
 
   useEffect(() => {
     dispatch(fetchNewArrivals(24));
@@ -31,15 +32,40 @@ const NewArrivalsPage = () => {
         category: product.category,
         isOnSale: product.isOnSale,
         originalPrice: product.originalPrice,
-        isNew: product.isNew
+        isNew: product.isNew,
+        slug: product.slug || `product-${product.id}`,
+        shortDescription: product.shortDescription || (product.description ? product.description.substring(0, 100) + '...' : ''),
+        reviewCount: product.reviewCount || 0,
+        sku: product.sku || `SKU-${product.id}`,
+        tags: product.tags || [],
+        isFeatured: product.isFeatured || false,
+        isInStock: product.isInStock !== undefined ? product.isInStock : true,
+        isAvailable: product.isAvailable !== undefined ? product.isAvailable : true,
+        createdAt: product.createdAt || new Date().toISOString(),
+        updatedAt: product.updatedAt || new Date().toISOString()
       },
       quantity: 1
     }));
     
+    // Show visual feedback
+    setAddedToCart(prev => ({
+      ...prev,
+      [product.id]: true
+    }));
+    
+    // Show success toast
     toast.success(`${product.name} added to cart`, {
       position: 'top-right',
       duration: 2000,
     });
+    
+    // Reset feedback after animation
+    setTimeout(() => {
+      setAddedToCart(prev => ({
+        ...prev,
+        [product.id]: false
+      }));
+    }, 2000);
   }, [dispatch]);
 
   if (loading) {
@@ -70,19 +96,14 @@ const NewArrivalsPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {newArrivals.length > 0 ? (
             newArrivals.map(product => (
-              <div key={product.id} className="relative group">
+              <div key={product.id} className="relative">
                 <ProductCard 
                   product={product} 
                   onAddToCart={handleAddToCart}
-                  glassmorphic 
+                  glassmorphic
+                  showAddToCart={true}
+                  addedToCart={addedToCart[product.id] || false}
                 />
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium text-sm flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform transition-all"
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  Add to Cart
-                </button>
               </div>
             ))
           ) : (

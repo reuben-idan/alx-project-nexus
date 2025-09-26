@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { fetchProducts } from '../store/slices/productsSlice';
 import { addToCart } from '../store/slices/cartSlice';
 import { Product, ProductFilterOptions, ProductSortOption } from '../types/product';
+import { toast } from 'sonner';
+import { ShoppingCart, Heart, Eye, Star } from 'lucide-react';
 
 // Components
 import ProductCard from '../components/products/ProductCard';
@@ -44,11 +46,13 @@ const ProductsPage = () => {
         };
         
         // Remove undefined values
-        Object.keys(params).forEach(key => 
-          params[key as keyof typeof params] === undefined && delete params[key as keyof typeof params]
-        );
+        Object.keys(params).forEach(key => {
+          if (params[key as keyof typeof params] === undefined) {
+            delete params[key as keyof typeof params];
+          }
+        });
         
-        dispatch(fetchProducts(params));
+        await dispatch(fetchProducts(params));
       } catch (err) {
         console.error('Error fetching products:', err);
       }
@@ -58,28 +62,64 @@ const ProductsPage = () => {
   }, [dispatch, currentPage, itemsPerPage, sortBy, filters]);
 
   // Handle add to cart
-  const handleAddToCart = (product: Product) => {
+  const [addedToCart, setAddedToCart] = useState<{[key: string]: boolean}>({});
+  
+  const handleAddToCart = useCallback((product: Product) => {
     dispatch(addToCart({
-      product,
-      quantity: 1,
+      product: {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        images: product.images,
+        description: product.description,
+        stock: product.stock,
+        rating: product.rating,
+        category: product.category,
+        isOnSale: product.isOnSale,
+        originalPrice: product.originalPrice,
+        isNew: product.isNew
+      },
+      quantity: 1
     }));
+    
+    // Show visual feedback
+    setAddedToCart(prev => ({
+      ...prev,
+      [product.id]: true
+    }));
+    
+    // Show success toast
+    toast.success(`${product.name} added to cart`, {
+      position: 'top-right',
+      duration: 2000,
+    });
+    
+    // Reset feedback after animation
+    setTimeout(() => {
+      setAddedToCart(prev => ({
+        ...prev,
+        [product.id]: false
+      }));
+    }, 2000);
+  }, [dispatch]);
+
+  // Add animation to add to cart button
+  const addCartButtonAnimation = (product: Product) => {
+    return addedToCart[product.id] ? 'animate-check' : '';
   };
 
   // Handle filter changes
   const handleFilterChange = (newFilters: Partial<ProductFilterOptions>) => {
-    setFilters(prev => {
-      const updatedFilters = {
-        ...prev,
-        ...newFilters,
-      };
-      return updatedFilters;
-    });
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ...newFilters
+    }));
     setCurrentPage(1); // Reset to first page when filters change
   };
 
-  // Handle sort change
-  const handleSortChange = (value: ProductSortOption) => {
-    setSortBy(value);
+  // Handle sort changes
+  const handleSortChange = (newSortBy: ProductSortOption) => {
+    setSortBy(newSortBy);
     setCurrentPage(1); // Reset to first page when sort changes
   };
 
@@ -168,11 +208,14 @@ const ProductsPage = () => {
             {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
-                <ProductCard 
-                  key={product.id}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                />
+                <div key={product.id} className="relative group">
+                  <ProductCard 
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    showAddToCart={true}
+                    addedToCart={addedToCart[product.id] || false}
+                  />
+                </div>
               ))}
             </div>
 
