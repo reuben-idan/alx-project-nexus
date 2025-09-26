@@ -4,166 +4,9 @@ import { X, Package, Truck, CheckCircle, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../lib/utils';
 import { Button } from '../components/ui/button';
-
-type OrderStatus = 'processing' | 'shipped' | 'delivered' | 'cancelled';
-
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
-interface Order {
-  id: string;
-  date: Date;
-  status: OrderStatus;
-  items: OrderItem[];
-  total: number;
-  shippingAddress: {
-    name: string;
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-  };
-  paymentMethod: string;
-  trackingNumber?: string;
-}
-
-// Mock data - in a real app, this would come from an API
-const mockOrders: Order[] = [
-  {
-    id: '#12345',
-    date: new Date(2023, 10, 15),
-    status: 'delivered',
-    total: 187.94,
-        items: [
-      {
-        id: '1',
-        name: 'Organic Bananas',
-        price: 0.99,
-        quantity: 5,
-            image: '/banana.png'
-      },
-      {
-        id: '2',
-        name: 'Organic Gala Apples',
-        price: 2.49,
-        quantity: 3,
-            image: '/apple.png'
-      },
-      {
-        id: '3',
-        name: 'Organic Free-Range Eggs',
-        price: 4.99,
-        quantity: 2,
-            image: '/eggs.png'
-      }
-    ],
-    shippingAddress: {
-      name: 'John Doe',
-      street: '123 Main St',
-      city: 'Anytown',
-      state: 'CA',
-      zipCode: '12345'
-    },
-    paymentMethod: 'Visa ending in 4242',
-    trackingNumber: '1Z999AA1234567890'
-  },
-  {
-    id: '#12344',
-    date: new Date(2023, 10, 10),
-    status: 'shipped',
-    total: 89.97,
-        items: [
-      {
-        id: '4',
-        name: 'Organic Chicken Breast',
-        price: 8.99,
-        quantity: 2,
-            image: '/salmon.png'
-      },
-      {
-        id: '5',
-        name: 'Organic Brown Rice',
-        price: 3.99,
-        quantity: 1,
-            image: '/peas.png'
-      }
-    ],
-    shippingAddress: {
-      name: 'John Doe',
-      street: '123 Main St',
-      city: 'Anytown',
-      state: 'CA',
-      zipCode: '12345'
-    },
-    paymentMethod: 'Visa ending in 4242',
-    trackingNumber: '1Z999BB9876543210'
-  },
-  {
-    id: '#12343',
-    date: new Date(2023, 10, 5),
-    status: 'processing',
-    total: 32.97,
-        items: [
-      {
-        id: '6',
-        name: 'Organic Spinach',
-        price: 2.99,
-        quantity: 3,
-            image: '/peas.png'
-      },
-      {
-        id: '7',
-        name: 'Organic Strawberries',
-        price: 4.99,
-        quantity: 2,
-            image: '/almonds.png'
-      }
-    ],
-    shippingAddress: {
-      name: 'John Doe',
-      street: '123 Main St',
-      city: 'Anytown',
-      state: 'CA',
-      zipCode: '12345'
-    },
-    paymentMethod: 'Visa ending in 4242'
-  },
-  {
-    id: '#12342',
-    date: new Date(2023, 9, 28),
-    status: 'cancelled',
-    total: 45.98,
-        items: [
-      {
-        id: '8',
-        name: 'Organic Avocados',
-        price: 2.99,
-        quantity: 4,
-            image: '/banana.png'
-      },
-      {
-        id: '9',
-        name: 'Organic Blueberries',
-        price: 4.99,
-        quantity: 2,
-            image: '/orange-juice.png'
-      }
-    ],
-    shippingAddress: {
-      name: 'John Doe',
-      street: '123 Main St',
-      city: 'Anytown',
-      state: 'CA',
-      zipCode: '12345'
-    },
-    paymentMethod: 'Visa ending in 4242'
-  }
-];
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { Order, OrderStatus } from '../store/slices/ordersSlice';
 
 const statusIcons = {
   processing: <RefreshCw className="h-4 w-4 text-amber-500 animate-spin" />,
@@ -180,12 +23,13 @@ const statusColors = {
 };
 
 const OrdersPage = () => {
+  const orders = useSelector((state: RootState) => state.orders?.orders || []);
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | 'all'>('all');
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
-  const filteredOrders = selectedStatus === 'all' 
-    ? mockOrders 
-    : mockOrders.filter(order => order.status === selectedStatus);
+  const filteredOrders = selectedStatus === 'all'
+    ? orders
+    : orders.filter(order => order.status === selectedStatus);
 
   const toggleOrder = (orderId: string) => {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);

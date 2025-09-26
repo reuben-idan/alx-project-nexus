@@ -100,7 +100,7 @@
 
   /* Modern Inputs */
   .glass-input {
-    @apply w-full bg-glass-200/10 backdrop-blur-xl border border-glass-400/40 rounded-2xl px-4 py-3 text-white placeholder-glass-600 focus:border-water-400 focus:ring-2 focus:ring-water-400/20 focus:outline-none transition-all duration-300;
+    @apply w-full bg-glass-200/10 backdrop-blur-xl border border-glass-400/40 rounded-2xl px-4 py-3 text-black placeholder-gray-500 focus:border-water-400 focus:ring-2 focus:ring-water-400/20 focus:outline-none transition-all duration-300;
   }
 
   /* Glassmorphic Navigation */

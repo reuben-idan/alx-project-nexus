@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeft, Check, Truck, Shield, Lock } from 'lucide-react';
 import { formatCurrency, setLocalStorage } from '../lib/utils';
 import { clearCart, selectCartItems } from '../store/slices/cartSlice';
+import { addOrder } from '../store/slices/ordersSlice';
 import { AppDispatch } from '../store';
 import { Button } from '../components/ui/button';
 import { useForm } from 'react-hook-form';
@@ -102,6 +103,33 @@ const CheckoutPage = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1200));
+
+      // Create order from checkout data
+      const orderData = {
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image || '/images/logo.png',
+        })),
+        total: items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        shippingAddress: {
+          name: `${data.firstName} ${data.lastName}`,
+          street: data.address,
+          city: data.city,
+          state: data.state,
+          zipCode: data.zipCode,
+        },
+        paymentMethod: data.paymentMethod === 'credit-card'
+          ? `Visa ending in ${data.cardNumber?.slice(-4) || '****'}`
+          : data.paymentMethod === 'paypal'
+          ? 'PayPal'
+          : 'Apple Pay',
+      };
+
+      // Add order to store
+      dispatch(addOrder(orderData));
 
       // Optionally save shipping info
       if (data.saveInfo) {
@@ -376,6 +404,7 @@ const CheckoutPage = () => {
                               type="text"
                               id="cardNumber"
                               placeholder="1234 5678 9012 3456"
+                              maxLength={19}
                               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
                                 errors.cardNumber ? 'border-red-500' : ''
                               }`}
@@ -383,9 +412,36 @@ const CheckoutPage = () => {
                                 required: 'Card number is required',
                                 pattern: {
                                   value: /^[0-9\s]{13,19}$/,
-                                  message: 'Invalid card number'
+                                  message: 'Invalid card number format'
+                                },
+                                validate: {
+                                  luhn: (value) => {
+                                    const cleanValue = value.replace(/\s/g, '');
+                                    if (cleanValue.length < 13) return 'Card number too short';
+                                    
+                                    // Luhn algorithm validation
+                                    let sum = 0;
+                                    let shouldDouble = false;
+                                    for (let i = cleanValue.length - 1; i >= 0; i--) {
+                                      let digit = parseInt(cleanValue.charAt(i), 10);
+                                      if (shouldDouble) {
+                                        digit *= 2;
+                                        if (digit > 9) digit -= 9;
+                                      }
+                                      sum += digit;
+                                      shouldDouble = !shouldDouble;
+                                    }
+                                    return sum % 10 === 0 || 'Invalid card number';
+                                  }
                                 }
                               })}
+                              onChange={(e) => {
+                                // Format card number with spaces
+                                let value = e.target.value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim();
+                                if (value.length > 19) value = value.substring(0, 19);
+                                e.target.value = value;
+                                register('cardNumber').onChange(e);
+                              }}
                             />
                             {errors.cardNumber && (
                               <p className="mt-1 text-sm text-red-600">{errors.cardNumber.message}</p>
@@ -440,9 +496,10 @@ const CheckoutPage = () => {
                                 CVV <span className="text-red-500">*</span>
                               </label>
                               <input
-                                type="text"
+                                type="password"
                                 id="cardCvv"
                                 placeholder="123"
+                                maxLength={4}
                                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
                                   errors.cardCvv ? 'border-red-500' : ''
                                 }`}
@@ -450,7 +507,7 @@ const CheckoutPage = () => {
                                   required: 'CVV is required',
                                   pattern: {
                                     value: /^[0-9]{3,4}$/,
-                                    message: 'Invalid CVV'
+                                    message: 'CVV must be 3 or 4 digits'
                                   }
                                 })}
                               />
@@ -506,7 +563,11 @@ const CheckoutPage = () => {
                   
                   <div className="mt-6 flex items-center text-sm text-gray-500">
                     <Lock className="h-4 w-4 text-gray-400 mr-2" />
-                    <p>Your payment information is encrypted and secure.</p>
+                    <p>Your payment information is encrypted and secure. We use industry-standard SSL encryption and never store your full card details.</p>
+                  </div>
+                  <div className="mt-4 flex items-center text-sm text-green-600">
+                    <Shield className="h-4 w-4 text-green-500 mr-2" />
+                    <p>PCI DSS compliant payment processing</p>
                   </div>
                 </div>
               )}

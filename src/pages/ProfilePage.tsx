@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Camera, User, MapPin, CreditCard, Bell, Shield, Pencil, Plus, CheckCircle, XCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import LogoutButton from '../features/auth/components/LogoutButton';
@@ -328,6 +327,14 @@ const ProfilePage = () => {
                     <span>Order #12346</span>
                     <span className="text-yellow-600 font-semibold flex items-center gap-1"><CreditCard className="h-4 w-4" /> Processing</span>
                   </div>
+                </div>
+                <div className="text-center">
+                  <Link
+                    to="/orders"
+                    className="btn-water px-6 py-3 rounded-full font-semibold shadow hover:scale-105 transition-transform"
+                  >
+                    View All Orders
+                  </Link>
                 </div>
               </motion.div>
             </TabsContent>
