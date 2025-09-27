@@ -46,7 +46,7 @@
 | **Build**      | Vite 4, Rollup, SWC                                                         |
 | **Testing**    | Jest, React Testing Library, MSW (Mock Service Worker)                      |
 | **Linting**    | ESLint, Prettier, Husky (Git Hooks)                                         |
-| **Deployment** | Vercel (Frontend), Netlify (Preview), GitHub Actions (CI/CD)                |
+| **Deployment** | Vercel (Frontend)              |
 
 ##  Getting Started
 
