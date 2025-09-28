@@ -156,28 +156,24 @@ const Navbar: React.FC = () => {
 
           {/* Right side icons */}
           <div className="flex items-center space-x-2">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="button"
-              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300"
-              onClick={() => {
-                dispatch(toggleSearch());
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              aria-label="Search products"
-            >
-              <Search className="h-5 w-5" />
-            </motion.button>
+            <Link to="/products">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300"
+                aria-label="Search products"
+                onClick={() => {
+                  // Optional: Add any search-specific logic here if needed
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                <Search className="h-5 w-5" />
+              </motion.div>
+            </Link>
 
             <Link
               to="/cart"
               className="relative"
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(toggleCart());
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
               aria-label={`Shopping Cart ${cartItemCount > 0 ? `(${cartItemCount} items)` : ''}`}
             >
               <motion.div
