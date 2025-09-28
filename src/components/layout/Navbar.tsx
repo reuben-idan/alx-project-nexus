@@ -5,7 +5,7 @@ import Logo from '../ui/Logo';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
-import { toggleCart, toggleSearch, setTheme } from '../../store/slices/uiSlice';
+import { setTheme } from '../../store/slices/uiSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../features/auth/hooks/useAuth';
 
