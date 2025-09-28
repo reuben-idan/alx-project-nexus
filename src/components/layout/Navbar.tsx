@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Search, User, Menu, X, ChevronDown, LogOut } from 'lucide-react';
 import Logo from '../ui/Logo';
@@ -42,8 +42,9 @@ const Navbar: React.FC = () => {
   ];
 
 
-  const cartItems = useSelector(selectCartItems);
+  const cartItems = useSelector(selectCartItems) || [];
   const { isAuthenticated, logout } = useAuth();
+  const cartItemCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -66,45 +67,95 @@ const Navbar: React.FC = () => {
     { name: 'Orders', path: '/orders' },
   ];
 
-  return (
-    // <header className="glass-nav relative z-50">
-    <header className="glass-nav fixed top-0 left-0 w-full z-50">
+  // Handle click outside mobile menu
+  const menuRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
+  return (
+    <header className="glass-nav fixed top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="flex items-center group">
-              <div className="glass-card rounded-2xl p-1 mr-3 group-hover:scale-105 transition-transform duration-300 flex items-center">
-                <Logo className="h-8 w-auto rounded-lg object-contain" />
-              </div>
-              <span className="glass-title text-xl">Everything Grocery</span>
-            </Link>
+          {/* Logo and Mobile Menu Button */}
+          <div className="flex items-center">
+            <div className="md:hidden mr-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
+                aria-expanded={isMobileMenuOpen}
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-controls="mobile-menu"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </motion.button>
+            </div>
+            
+            <div className="flex-shrink-0">
+              <Link 
+                to="/" 
+                className="flex items-center group"
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Home"
+              >
+                <div className="glass-card rounded-2xl p-1 mr-3 group-hover:scale-105 transition-transform duration-300 flex items-center">
+                  <Logo className="h-8 w-auto rounded-lg object-contain" />
+                </div>
+                <span className="glass-title text-xl hidden sm:inline">Everything Grocery</span>
+              </Link>
+            </div>
           </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              {navLinks.map((link) => {
-                return (
-                  <div key={link.path} className="relative group">
-                    <Link
-                      to={link.path}
-                      className={`glass-nav-item ${location.pathname === link.path ? 'glass-nav-item-active' : ''}`}
-                    >
-                      <div className="flex items-center">
-                        {link.name}
-                        {link.children && (
-                          <ChevronDown className="ml-1 h-4 w-4 transition-transform group-hover:rotate-180" />
-                        )}
-                      </div>
-                    </Link>
-
-                    {/* Dropdown Menu removed as requested */}
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navLinks.map((link) => (
+              <div key={link.path} className="relative group">
+                <Link
+                  to={link.path}
+                  className={`glass-nav-item px-4 py-2 ${
+                    location.pathname === link.path ? 'glass-nav-item-active' : ''
+                  }`}
+                  aria-current={location.pathname === link.path ? 'page' : undefined}
+                >
+                  <div className="flex items-center">
+                    {link.name}
+                    {link.children && (
+                      <ChevronDown className="ml-1 h-4 w-4 transition-transform group-hover:rotate-180" />
+                    )}
                   </div>
-                );
-              })}
-            </nav>
+                </Link>
+              </div>
+            ))}
+          </nav>
 
+          {/* Right side icons */}
+          <div className="flex items-center space-x-2">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -113,67 +164,87 @@ const Navbar: React.FC = () => {
               onClick={() => {
                 dispatch(toggleSearch());
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                window.location.href = '/products';
               }}
-              aria-label="Search"
+              aria-label="Search products"
             >
               <Search className="h-5 w-5" />
             </motion.button>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="button"
-              className="glass-card rounded-2xl p-3 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300 relative"
-              onClick={() => {
+            <Link
+              to="/cart"
+              className="relative"
+              onClick={(e) => {
+                e.preventDefault();
                 dispatch(toggleCart());
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                window.location.href = '/cart';
               }}
-              aria-label="Shopping Cart"
+              aria-label={`Shopping Cart ${cartItemCount > 0 ? `(${cartItemCount} items)` : ''}`}
             >
-              <ShoppingCart className="h-5 w-5" />
-              {cartItems && cartItems.length > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 bg-water-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
-                >
-                  {cartItems.length}
-                </motion.span>
-              )}
-            </motion.button>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {cartItemCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 bg-water-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                    aria-hidden="true"
+                  >
+                    {cartItemCount > 9 ? '9+' : cartItemCount}
+                  </motion.span>
+                )}
+              </motion.div>
+            </Link>
 
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="button"
-              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300"
+              className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 focus:ring-2 focus:ring-water-500 transition-all duration-300 hidden sm:block"
               onClick={() => {
                 const isDark = document.documentElement.classList.contains('dark');
                 dispatch(setTheme(isDark ? 'light' : 'dark'));
               }}
-              aria-label="Toggle theme"
+              aria-label={document.documentElement.classList.contains('dark') ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               <div className="w-5 h-5 flex items-center justify-center">
                 <span className="text-lg">🌙</span>
               </div>
             </motion.button>
 
-
             {isAuthenticated ? (
               <>
+<Link
+                  to="/orders"
+                  className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300 hidden md:block"
+                  aria-label="My Orders"
+                >
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 8 9 8 7"></polyline>
+                    </svg>
+                  </motion.div>
+                </Link>
                 <Link
                   to="/profile"
-                  className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
-                  aria-label="Account"
+                  className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300 hidden md:block"
+                  aria-label="My Account"
                 >
-                  <User className="h-5 w-5" />
-                </Link>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <User className="h-5 w-5" />
+                  </motion.div>
+n                </Link>
                 <button
-                  className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300 ml-2"
-                  aria-label="Sign Out"
                   onClick={logout}
+                  className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300 hidden md:block"
+                  aria-label="Sign Out"
                 >
                   <LogOut className="h-5 w-5" />
                 </button>
@@ -181,121 +252,156 @@ const Navbar: React.FC = () => {
             ) : (
               <Link
                 to="/auth"
-                className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
-                aria-label="Login/Register"
+                className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300 hidden md:block"
+                aria-label="Login or Register"
               >
                 <User className="h-5 w-5" />
               </Link>
             )}
-
-            {/* Mobile menu button */}
-            <div className="md:hidden ml-2">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="glass-card rounded-2xl p-2 text-glass-600 hover:text-white hover:bg-glass-300/20 transition-all duration-300"
-                aria-expanded={isMobileMenuOpen}
-                aria-label="Toggle menu"
-              >
-                <motion.div
-                  animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {isMobileMenuOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </motion.div>
-              </motion.button>
-            </div>
           </div>
         </div>
+      </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="md:hidden bg-glass-200/20 backdrop-blur-2xl border-t border-glass-300/20 overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="md:hidden fixed inset-0 bg-black/50 z-40 pt-16"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-modal="true"
+            role="dialog"
           >
-            <div className="px-4 pt-4 pb-6 space-y-2">
-              {navLinks.map((link) => (
-                <div key={link.path}>
-                  <Link
-                    to={link.path}
-                    className={`block px-4 py-3 rounded-2xl text-base font-medium transition-all duration-300 ${
-                      location.pathname === link.path
-                        ? 'bg-glass-400/30 text-white shadow-glass-sm'
-                        : 'text-glass-600 hover:text-white hover:bg-glass-300/20'
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                  {link.children && link.children.length > 0 && (
-                    <div className="pl-4 mt-2 space-y-1">
-                      {link.children.slice(0, 5).map((category) => (
-                        <Link
-                          key={category.id}
-                          to={`/categories/${category.slug}`}
-                          className="block px-4 py-2 text-sm text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"
-                        >
-                          {category.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              <div className="pt-4 border-t border-glass-300/20 mt-4">
-
-                {isAuthenticated ? (
-                  <>
+            <motion.div 
+              className="bg-white dark:bg-gray-900 w-full max-h-[calc(100vh-4rem)] overflow-y-auto rounded-b-2xl shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ y: -50 }}
+              animate={{ y: 0 }}
+              exit={{ y: -50 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              ref={menuRef}
+            >
+              <div className="px-4 pt-2 pb-6 space-y-1">
+                {navLinks.map((link) => (
+                  <div key={link.path} className="border-b border-gray-100 dark:border-gray-800 last:border-0">
                     <Link
-                      to="/profile"
-                      className="flex items-center px-4 py-3 text-base font-medium text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"
+                      to={link.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`block px-4 py-3 text-base font-medium rounded-lg ${
+                        location.pathname === link.path
+                          ? 'bg-water-50 text-water-600 dark:bg-water-900/30 dark:text-water-400'
+                          : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800/50'
+                      }`}
+                      aria-current={location.pathname === link.path ? 'page' : undefined}
                     >
-                      <User className="mr-3 h-6 w-6" />
-                      My Account
+                      <div className="flex items-center justify-between">
+                        {link.name}
+                        {link.children && (
+                          <ChevronDown className="h-4 w-4 transition-transform" />
+                        )}
+                      </div>
                     </Link>
-                    <button
-                      className="flex items-center px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-300 mt-2"
-                      onClick={logout}
-                    >
-                      <LogOut className="mr-3 h-6 w-6" />
-                      Sign Out
-                    </button>
-                  </>
-                ) : (
-                  <Link
-                    to="/auth"
-                    className="flex items-center px-4 py-3 text-base font-medium text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"
-                  >
-                    <User className="mr-3 h-6 w-6" />
-                    Login / Register
-                  </Link>
-                )}
-                <Link
-                  to="/cart"
-                  className="flex items-center px-4 py-3 text-base font-medium text-glass-600 hover:text-white hover:bg-glass-300/20 rounded-2xl transition-all duration-300"
-                >
-                  <div className="relative mr-3">
-                    <ShoppingCart className="h-6 w-6" />
-                    {cartItems && cartItems.length > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-water-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                        {cartItems.length}
-                      </span>
+                    
+                    {link.children && link.children.length > 0 && (
+                      <div className="pl-4 pb-2 space-y-1">
+                        {link.children.map((category) => (
+                          <Link
+                            key={category.id}
+                            to={`/categories/${category.slug}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`block px-4 py-2 text-sm rounded-lg ${
+                              location.pathname === `/categories/${category.slug}`
+                                ? 'bg-water-50 text-water-600 dark:bg-water-900/30 dark:text-water-400'
+                                : 'text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800/50'
+                            }`}
+                          >
+                            {category.name}
+                          </Link>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  Shopping Cart
-                </Link>
+                ))}
+
+                <div className="pt-2 space-y-1">
+                  {isAuthenticated ? (
+                    <>
+                      <Link
+                        to="/profile"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center px-4 py-3 text-base font-medium rounded-lg ${
+                          location.pathname === '/profile'
+                            ? 'bg-water-50 text-water-600 dark:bg-water-900/30 dark:text-water-400'
+                            : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800/50'
+                        }`}
+                      >
+                        <User className="mr-3 h-5 w-5 flex-shrink-0" />
+                        My Account
+                      </Link>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="w-full flex items-center px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30 rounded-lg"
+                      >
+                        <LogOut className="mr-3 h-5 w-5 flex-shrink-0" />
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      to="/auth"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center px-4 py-3 text-base font-medium rounded-lg ${
+                        location.pathname === '/auth'
+                          ? 'bg-water-50 text-water-600 dark:bg-water-900/30 dark:text-water-400'
+                          : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800/50'
+                      }`}
+                    >
+                      <User className="mr-3 h-5 w-5 flex-shrink-0" />
+                      Login / Register
+                    </Link>
+                  )}
+
+                  <Link
+                    to="/cart"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center px-4 py-3 text-base font-medium rounded-lg ${
+                      location.pathname === '/cart'
+                        ? 'bg-water-50 text-water-600 dark:bg-water-900/30 dark:text-water-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800/50'
+                    }`}
+                  >
+                    <div className="relative mr-3">
+                      <ShoppingCart className="h-5 w-5 flex-shrink-0" />
+                      {cartItems && cartItems.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-water-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                          {cartItems.length}
+                        </span>
+                      )}
+                    </div>
+                    Shopping Cart
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      const isDark = document.documentElement.classList.contains('dark');
+                      dispatch(setTheme(isDark ? 'light' : 'dark'));
+                    }}
+                    className="w-full flex items-center px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800/50 rounded-lg"
+                  >
+                    <span className="mr-3 text-lg">
+                      {document.documentElement.classList.contains('dark') ? '☀️' : '🌙'}
+                    </span>
+                    {document.documentElement.classList.contains('dark') ? 'Light' : 'Dark'} Mode
+                  </button>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
